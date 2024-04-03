@@ -1,0 +1,22 @@
+<header>
+    <div class="logo">
+      <img src="assets\FFSU_logo.png" alt="Logo">
+    </div>
+    <nav>
+      <ul>
+        <li>
+            <a href="#" (click)="toggleCoursesDropdown()">Cours</a>
+            <ul [@If]="showCourses==true">
+            @for (course of courses; track $index) {
+              <li>
+                <a>{{course}}</a>
+            </li>
+            }
+            </ul>
+        </li>
+        <li><a routerLink="/quizz">Quizz</a></li>
+        <li><a routerLink="/login">Login</a></li>
+        <li><a routerLink="/assistance">Assistance</a></li> 
+      </ul>
+    </nav>
+  </header>
