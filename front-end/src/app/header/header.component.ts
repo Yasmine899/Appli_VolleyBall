@@ -19,12 +19,10 @@ by: any;
     this.showCourses=false;
   }
 
-  toggleCoursesDropdown() {
-    if (this.showCourses==false){
-      this.showCourses=true;
-    } else {
-      this.showCourses=false;
-    }
+  showCoursesDropdown(){
+    console.log("over!!!\n");
+    this.showCourses=!this.showCourses;
   }
 
 }
+
