@@ -1,22 +1,22 @@
 <header>
-    <div class="logo">
+  <div class="logo">
       <img src="assets\FFSU_logo.png" alt="Logo">
-    </div>
-    <nav>
+  </div>
+  <nav>
       <ul>
-        <li>
-            <a href="#" (click)="toggleCoursesDropdown()">Cours</a>
-            <ul [@If]="showCourses==true">
-            @for (course of courses; track $index) {
-              <li>
-                <a>{{course}}</a>
-            </li>
-            }
-            </ul>
-        </li>
-        <li><a routerLink="/quizz">Quizz</a></li>
-        <li><a routerLink="/login">Login</a></li>
-        <li><a routerLink="/assistance">Assistance</a></li> 
+          <li>
+              <a href="#" class="menu-link">Cours</a>
+              <ul class="dropdown-menu">
+                @for(i of courses; track $index) {
+                  <li class="dropdown-item">
+                    <a href="#">{{i}}</a>
+                  </li>
+                }
+              </ul>
+          </li>
+          <li><a routerLink="/quizz" class="menu-link">Quizz</a></li>
+          <li><a routerLink="/login" class="menu-link">Login</a></li>
+          <li><a routerLink="/assistance" class="menu-link">Assistance</a></li>
       </ul>
-    </nav>
-  </header>
+  </nav>
+</header>
