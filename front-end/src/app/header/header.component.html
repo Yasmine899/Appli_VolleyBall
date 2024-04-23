@@ -5,7 +5,8 @@
   <nav>
       <ul>
           <li>
-              <a href="#" class="menu-link">Cours</a>
+              <!-- Use routerLink to navigate to the 'cours' component -->
+              <a routerLink="/cours" class="menu-link">Cours</a>
               <ul class="dropdown-menu">
                 @for(i of courses; track $index) {
                   <li class="dropdown-item">
@@ -20,3 +21,4 @@
       </ul>
   </nav>
 </header>
+<router-outlet></router-outlet>
