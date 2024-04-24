@@ -3,6 +3,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./header/header.component";
 import { ExamenComponent } from "./examen/examen.component";
 import { CoursComponent } from "./cours/cours.component";
+import { AppRoutingModule } from './app.routes';
 
 @Component({
     selector: 'app-root',

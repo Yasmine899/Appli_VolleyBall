@@ -4,18 +4,9 @@
   </div>
   <nav>
       <ul>
-          <li>
-              <!-- Use routerLink to navigate to the 'cours' component -->
-              <a routerLink="/cours" class="menu-link">Cours</a>
-              <ul class="dropdown-menu">
-                @for(i of courses; track $index) {
-                  <li class="dropdown-item">
-                    <a href="#">{{i}}</a>
-                  </li>
-                }
-              </ul>
-          </li>
-          <li><a routerLink="/quizz" class="menu-link">Quizz</a></li>
+          <li><a routerLink="/cours" class="menu-link">Cours</a></li>
+          <li><a routerLink="/entrainement" class="menu-link">Entrainement</a></li>
+          <li><a routerLink="/examen" class="menu-link">Examen</a></li>
           <li><a routerLink="/login" class="menu-link">Login</a></li>
           <li><a routerLink="/assistance" class="menu-link">Assistance</a></li>
       </ul>
