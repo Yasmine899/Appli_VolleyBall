@@ -1,8 +1,13 @@
 /* Styles pour le header */
+body {
+  font-family: 'Oswald', sans-serif;
+  font-style: normal;
+}
+
 header {
   background-color: #007DA0;
   color: #fff; /* Blanc */
-  padding: 1.5vw 2.5vw;
+  padding: 0px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,7 +26,7 @@ header {
     ul {
       list-style-type: none;
       margin: 0;
-      padding: 0;
+      padding: 5px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -30,36 +35,18 @@ header {
         position: relative;
 
         a {
-          color: #fff; /* Blanc */
+          color: #ffffff; 
           text-decoration: none;
           transition: color 0.3s ease;
-          font-size: 1.2vw;
+          font-size: 1.7vw;
 
           @media screen and (max-width: 768px) {
             font-size: 1vw;
           }
 
           &:hover {
-            color: #ffd700; /* Jaune doré */
+            color: #8BDBEC;
           }
-        }
-
-        .dropdown-menu {
-          display: none;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 100vw;
-          background-color: #007DA4; /* Gris foncé */
-          padding: 1vw;
-
-          .dropdown-item {
-            margin: 0;
-          }
-        }
-
-        &:hover .dropdown-menu {
-          display: block;
         }
       }
     }
