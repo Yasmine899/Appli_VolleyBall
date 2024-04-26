@@ -1,5 +1,20 @@
-<div id="timer">
-    <p>test</p>
-</div>
-<div id="question_overview">
+<div id="container">
+    <h1>Examen</h1>
+    <p>Information sur l'examen...</p>
+    <br>
+    <!--<button (click)="print_exam('exam_preview')">Print l'examen</button>-->
+    <br>
+    <div id="exam_preview">
+        <div *ngFor="let question of questions">
+            <h2>{{ question.statement }}</h2>
+            <ul>
+                <li *ngFor="let option of question.options; let i = index">
+                  <label class="option-label" for="`option-${index}`">
+                    <input type="checkbox" id="`option-${index}" class="option-checkbox">
+                    <span class="option-text">{{ option }}</span>
+                  </label>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
