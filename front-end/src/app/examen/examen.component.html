@@ -8,7 +8,7 @@
         <div *ngFor="let question of questions">
             <h2>{{ question.statement }}</h2>
             <ul>
-                <li *ngFor="let option of question.options; let i = index">
+                <li *ngFor="let option of question.options; let i = index" class="listElem">
                   <label class="option-label" for="`option-${index}`">
                     <input type="checkbox" id="`option-${index}" class="option-checkbox">
                     <span class="option-text">{{ option }}</span>
