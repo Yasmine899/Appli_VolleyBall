@@ -6,14 +6,9 @@ import java.sql.SQLException;
 
 public class connectMysql {
 
-    public Connection getConnection() {
-        //url incorrecte
-        String url = "jdbc:mysql://yzeng.insa-toulouse.fr:3306/bdd_pir_volleyball";
-        String username = "bdd_pir_volleyball";
-        String password = "bdd_pir_03";
+    public static Connection getConnection() {
         try {
-            return DriverManager.getConnection(url, username, password);
-            
+            return DriverManager.getConnection("jdbc:mysql://srv-bdens.insa-toulouse.fr:3306/projet_gei_017", "projet_gei_017", "deiJies9");
         } catch (SQLException e) {
             System.out.println("Erreur lors de la connexion à la base de données : " + e.getMessage());
         }
