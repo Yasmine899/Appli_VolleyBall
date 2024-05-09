@@ -2,7 +2,6 @@ package backend;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,6 +78,7 @@ public class Course {
         preparedStatement.setInt(3, idChaptre); 
         int rowsAffected = preparedStatement.executeUpdate();
         System.out.println("Rows affected: " + rowsAffected);
+        
         connection.close();
         } catch (SQLException e) {
             System.out.println("--------erreur de insert course---------------------");
@@ -92,7 +92,6 @@ public class Course {
         String sql = "DELETE FROM courses WHERE idCourse = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setBigDecimal(1, idCourse); 
-        System.out.println(sql + idCourse);
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected>0){
             reussi=true;

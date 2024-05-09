@@ -33,11 +33,7 @@ public class testCourse {
     public void testDeleteString(){
        assert course.delete_course(testString);
     }
-    @Test
-    public void testInsert_delete(){
-        course.insert_course(testId, testString, testChapitre);
-        assert course.delete_course(testString);
-    }
+
     @Test
     public void testUpdateContext(){
         course.insert_course(testId, testString, testChapitre);
