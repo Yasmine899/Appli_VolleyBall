@@ -209,4 +209,8 @@ public class Reponse {
     public void setReponseCorrecte(boolean reponseCorrecte) {
         this.reponseCorrecte = reponseCorrecte;
     }
+
+    public boolean estCorrecte() {
+    return this.reponseCorrecte;
+    }
 }

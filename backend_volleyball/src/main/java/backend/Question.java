@@ -13,6 +13,10 @@ public class Question {
     private String questionText;
     private int questionScore;
 
+
+    public int getScore(){
+        return this.questionScore;
+    }
     public Question(int chapitre, String questionText, int questionScore) {
         this.chapitre = chapitre;
         this.questionText = questionText;
