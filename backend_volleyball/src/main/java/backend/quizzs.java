@@ -51,6 +51,8 @@ public class quizzs {
         }
         return scoreTotal;
     }
+
+
     public int getRandomQuizz(int idChapitre){
         List<Integer> listQuizz=getQuizzbyidChapitre(idChapitre);
         Random random = new Random();
@@ -80,6 +82,8 @@ public class quizzs {
         }
         return quizzIds;
     }
+
+
     public void insert_quizz ( int idChapitre, int scoreTotal){
        try {
         Connection connection = connectMysql.getConnection();
@@ -97,6 +101,7 @@ public class quizzs {
         }
         
     }
+    
     //insert avec   quizz_question.insert_quizz_AllQuestion(idQuizz,idChapitre );
     public void insert_quizz ( int idQuizz,int idChapitre, int scoreTotal){
         try {

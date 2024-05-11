@@ -3,9 +3,11 @@ package backend;
 import java.util.ArrayList;
 
 public class Histoire {
+    private int idhistoire;
     private int idquiz;
     private int idreponse;
-    public Histoire(int idquiz,int idreponse){
+    public Histoire(int idhistoire,int idquiz,int idreponse){
+        this.idhistoire=idhistoire;
         this.idquiz=idquiz;
         this.idreponse=idreponse;
     }
@@ -15,13 +17,14 @@ public class Histoire {
     public int getIdreponse() {
         return idreponse;
     }
-    public ArrayList<Reponse> getreponses(){
+    public ArrayList<ArrayList<String>> getreponses(){
         return null;
         //lier au bdd
     }
 
-    //a modifier 
-    public ArrayList<Question> getIdQuestions(){
+  
+    public ArrayList<Integer> getIdQuestions(){
+         //lier au bdd
         return null;
     }
 

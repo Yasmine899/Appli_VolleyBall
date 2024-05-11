@@ -12,6 +12,9 @@ public class Reponse {
     private String reponseText;
     private boolean reponseCorrecte;
 
+    public String getReponseText() {
+        return reponseText;
+    }
 
     public void insertReponse() {
         String sql = "INSERT INTO reponse (question_id, reponse_text, reponse_correcte) VALUES (?, ?, ?)";
