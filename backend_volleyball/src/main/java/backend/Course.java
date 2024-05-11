@@ -1,6 +1,5 @@
 package backend;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,23 +8,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
-     
+    private String  course_description;
+    private int  idChapitre;
+    private String Reference_id;
+      public Course (){}
+      public Course (int course_id,String course_description,int idChapitre,String Reference_id){
+        this.Reference_id=Reference_id;
+        this.course_description=course_description;
+        this.idChapitre=idChapitre;
+      }
 
-    //Obtenir tous les id de courses par les chapitres
-    public List<BigDecimal> getCoursesByChapterId(int idChapter) {
-        List<BigDecimal> courseIds = new ArrayList<>();
+    //Obtenir tous les courses par les chapitres
+    public List<Course> getCoursesByChapterId(int idChapter) {
+        List<Course> courseIds = new ArrayList<>();
         try{
             Connection connection =connectMysql.getConnection();
         
-            String sql = "SELECT idCourse FROM courses WHERE idChapitre = ?";
+            String sql = "SELECT * FROM courses WHERE idChapitre = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, idChapter);
 
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                BigDecimal courseId = resultSet.getBigDecimal("idCourse");
-                courseIds.add(courseId);
+                Course course= new Course();
+                course.setCourse_description(resultSet.getString("course_description"));
+                course.setIdChapitre(idChapter);
+                course.setReference_id(resultSet.getString("Reference_id"));
+                courseIds.add(course);
             }
             resultSet.close();
             statement.close();
@@ -39,18 +49,18 @@ public class Course {
 
 
     //obtenir la description de ce idCourse
-    public String getDescriptionByidCourse(BigDecimal idCourse) {
+    public String getDescriptionByReferenceId(String  Reference_id) {
       String result=null;
         try{
             Connection connection =connectMysql.getConnection();
         
-            String sql = "SELECT description FROM courses WHERE idCourse = ?";
+            String sql = "SELECT course_description FROM courses WHERE Reference_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setBigDecimal(1, idCourse);
+            statement.setString(1, Reference_id);
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                result = resultSet.getString("description");
+                result = resultSet.getString("course_description");
             }
             resultSet.close();
             statement.close();
@@ -65,17 +75,34 @@ public class Course {
 
 
 
+    public void setCourse_description(String course_description) {
+        this.course_description = course_description;
+    }
+    public void setIdChapitre(int idChapitre) {
+        this.idChapitre = idChapitre;
+    }
+    public void setReference_id(String reference_id) {
+        Reference_id = reference_id;
+    }
 
-
+    @Override
+    public String toString() {
+        
+        return  "Course{\n" +
+        "Reference ID= " + this.Reference_id +
+        "\n, chapitre= " + this.idChapitre +
+        ", Text='" + this.course_description +
+        '}';
+    }
    
-    public void insert_course(BigDecimal  idCourse, String description, int idChaptre){
+    public void insert_course(String  Reference_id, String course_description, int idChaptre){
         try {
         Connection connection = connectMysql.getConnection();
-        String sql = "INSERT INTO courses (idCourse, description, idChapitre) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO courses (course_description, idChapitre,Reference_id) VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setBigDecimal(1, idCourse); 
-        preparedStatement.setString(2,description); 
-        preparedStatement.setInt(3, idChaptre); 
+        preparedStatement.setString(1, course_description); 
+        preparedStatement.setString(3,Reference_id); 
+        preparedStatement.setInt(2, idChaptre); 
         int rowsAffected = preparedStatement.executeUpdate();
         System.out.println("Rows affected: " + rowsAffected);
         
@@ -85,13 +112,13 @@ public class Course {
             e.printStackTrace();
         }
     }
-    public boolean delete_course(BigDecimal idCourse){
+    public boolean delete_course_by_reference(String Reference_id){
         boolean reussi =false;
         try {
         Connection connection = connectMysql.getConnection();
-        String sql = "DELETE FROM courses WHERE idCourse = ?";
+        String sql = "DELETE FROM courses WHERE Reference_id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setBigDecimal(1, idCourse); 
+        preparedStatement.setString(1,Reference_id); 
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected>0){
             reussi=true;
@@ -104,11 +131,11 @@ public class Course {
         }
         return reussi; 
     }
-    public boolean delete_course(String description){
+    public boolean delete_course_by_description(String description){
         boolean reussi =false;
         try {
         Connection connection = connectMysql.getConnection();
-        String sql = "DELETE FROM courses WHERE description = ?";
+        String sql = "DELETE FROM courses WHERE course_description = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, description); 
         int rowsAffected = preparedStatement.executeUpdate();
@@ -143,35 +170,14 @@ public class Course {
         return reussi; 
     }
 
-    public boolean update_course(BigDecimal idCourse,String updatedescription){
+    public boolean update_course(String Reference_id ,String updatedescription){
         boolean reussi =false;
         try {
         Connection connection = connectMysql.getConnection();
-        String sql = "UPDATE courses SET description = ? WHERE idCourse = ?";
+        String sql = "UPDATE courses SET course_description = ? WHERE Reference_id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, updatedescription); 
-        preparedStatement.setBigDecimal(2, idCourse);
-        int rowsAffected = preparedStatement.executeUpdate();
-        if (rowsAffected>0){
-            reussi=true;
-        }
-        System.out.println("Rows affected: " + rowsAffected);
-        connection.close();
-        } catch (SQLException e) {
-            System.out.println("--------erreur de update course---------------------");
-            e.printStackTrace();
-        }
-        return reussi; 
-    }
-
-    public boolean update_course(BigDecimal idCourse,int idChapitre){
-        boolean reussi =false;
-        try {
-        Connection connection = connectMysql.getConnection();
-        String sql = "UPDATE courses SET idChapitre = ? WHERE idCourse = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, idChapitre); 
-        preparedStatement.setBigDecimal(2, idCourse);
+        preparedStatement.setString(2, Reference_id);
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected>0){
             reussi=true;

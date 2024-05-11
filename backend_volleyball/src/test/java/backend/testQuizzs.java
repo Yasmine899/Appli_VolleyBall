@@ -13,12 +13,23 @@ public class testQuizzs {
     int testIdChapitre2=9998;
     int testScoreFinal=9999;
     
+
+    @Test 
+    public void testGetQuizzbyidquizz(){
+      
+        System.out.println(  quizzs.getQuestionbyQuizz(1));
+    }
      @Test
     public void testInsert(){
-        quizzs.insert_quizz(testIdQuizz,testIdChapitre, testScoreFinal);
+        quizzs.insert_quizz(testIdQuizz,1, 20);
+        quizz_question quizz_question = new quizz_question();
+        quizz_question.insert_quizz_AllQuestion(testIdQuizz, 1);
     }
     @Test
     public void testDeletebyid(){
+      
+       quizz_question quizz_question = new quizz_question();
+       assert quizz_question.Delete_quizz_question(testIdQuizz);
        assert quizzs.Delete_quizz(testIdQuizz);
     }
     @Test
