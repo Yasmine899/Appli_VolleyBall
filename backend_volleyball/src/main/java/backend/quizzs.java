@@ -31,6 +31,12 @@ public class quizzs {
         return questions;
     }
     
+    public static ArrayList<Integer> getIDQuestionbyQuizz(int idQuizz){
+        ArrayList<Integer> questions = new ArrayList<>();
+      //ici
+        return questions;
+    }
+
 
     public static int getScoreTotalByIdQuizz(int idQuizz){
         int scoreTotal=-1;
@@ -101,7 +107,7 @@ public class quizzs {
         }
         
     }
-    
+
     //insert avec   quizz_question.insert_quizz_AllQuestion(idQuizz,idChapitre );
     public void insert_quizz ( int idQuizz,int idChapitre, int scoreTotal){
         try {
