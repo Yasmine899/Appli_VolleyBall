@@ -49,7 +49,7 @@ public class quizzs {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des questions par quizz : " + e.getMessage());
         }
-        return idQuestions;
+        return (ArrayList<Integer>) idQuestions;
     }
 
     public static int getScoreTotalByIdQuizz(int idQuizz){
