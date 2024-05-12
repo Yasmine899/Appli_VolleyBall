@@ -32,11 +32,25 @@ public class quizzs {
     }
     
     public static ArrayList<Integer> getIDQuestionbyQuizz(int idQuizz){
-        ArrayList<Integer> questions = new ArrayList<>();
-      //ici
-        return questions;
+        List <Integer> idQuestions=new ArrayList<>();
+        String sql = "SELECT * FROM quizz_question WHERE idQuizz = ?";
+        try (
+                Connection connection = connectMysql.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, idQuizz);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                   idQuestions.add(resultSet.getInt("idQuestion"));
+                }
+                statement.close();
+                connection.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des questions par quizz : " + e.getMessage());
+        }
+        return idQuestions;
     }
-
 
     public static int getScoreTotalByIdQuizz(int idQuizz){
         int scoreTotal=-1;
