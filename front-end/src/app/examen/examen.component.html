@@ -2,9 +2,10 @@
     <h1>Examen</h1>
     <p>Information sur l'examen...</p>
     <br>
-    <!--<button (click)="print_exam('exam_preview')">Print l'examen</button>-->
+    <!--<button (click)="new_exam('exam_preview')">Générer un nouvel examen</button>-->
+    <button (click)="print_exam()">Print l'examen</button>
     <br>
-    <div id="exam_preview">
+    <div #exam_preview>
         <div *ngFor="let question of questions">
             <h2>{{ question.statement }}</h2>
             <ul>
