@@ -19,7 +19,29 @@ public class Course {
         this.idChapitre=idChapitre;
         this.title=title;
       }
+    //obtenir les chapitre par les idSection
+    public List<Integer> getChapitreBySection(int IdSection){
+          Connection connection =connectMysql.getConnection();
+        List<Integer> idChapitres=new ArrayList<>();
+        try{
+            String sql = "select idChapitre from section_chapitre where idSection =?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, IdSection);
 
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+            idChapitres.add(resultSet.getInt("idChapitre);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idChapitres;
+    }
+    
     //Obtenir tous les courses par les chapitres
     public List<Course> getCoursesByChapterId(int idChapter) {
         List<Course> courseIds = new ArrayList<>();
