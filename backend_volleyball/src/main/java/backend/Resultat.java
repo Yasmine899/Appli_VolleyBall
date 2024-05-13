@@ -4,100 +4,148 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mysql.cj.xdevapi.Statement;
 
 
 public class Resultat {
  
-    /* repartir quiz par QCM et NQCM ,retourner noteQuiz,noteQCM,noteNQCM */
-    ArrayList<Integer> getNoteQuiz(int IdResultats) throws SQLException{
-        ArrayList<Integer> res=new ArrayList<>();
-        ArrayList<Integer> idQuestionsQCM=new ArrayList();
-        ArrayList<Integer> idQuestionsNQCM=new ArrayList();
-
+    /* 4 retourner noteQuiz */
+    public int getNoteQuiz(int IdResultats) throws SQLException{
         int idquiz=getIdquizzByIdresultats(IdResultats);
         ArrayList<Integer> idQuestions=quizzs.getIDQuestionbyQuizz(idquiz);
-        
-        //repartir quiz par partie QCM et NQCM
-        for(int i=0;i<idQuestions.size();i++){
-            int idQuestion=idQuestions.get(i);
-            //on verifier si cette question a des choix pour identifier si c'est QCM ou pas
-            if( Reponse.getReponsesByQuestionId(idQuestion).size() >0 ){
-                idQuestionsQCM.add(idQuestion);
-            }else{
-                idQuestionsNQCM.add(idQuestion);
-            }
+        int note=0;
+        int IdReponseQuiz=getIdReponseQuizByIdresultats(IdResultats);
+        for(int idQuestion:idQuestions){
+            note+=getPointOfQuestion(IdReponseQuiz, idQuestion);
         }
-
-        //calculer les notes de chaque parties
-        int pointQCM=getPointOfSomeQuestions(IdResultats, idQuestionsQCM);
-        int pointNQCM=getPointOfSomeQuestions(IdResultats, idQuestionsNQCM);
-        res.add(pointNQCM+pointQCM);
-        res.add(pointQCM);
-        res.add(pointNQCM);
-        return res;
+        return note;
     }
 
-    /* verifier les reponse de la partie de QCM */
-    /* Partie QCM */
-    //renvoyer la note d'un quiz de partie QCM
-    public void verifierQCM(int IdResultats) throws SQLException{
-        ArrayList<Integer> idQuestionsQCM=new ArrayList();
-      
+    //3. quand user a fini ce quiz,on va calculer la note dequiz 
+    //evaluer les reponse de quiz et les stocker dans bdd
+    public void verifierQuiz(int IdResultats) throws SQLException{
+       
         int idquiz=getIdquizzByIdresultats(IdResultats);
         ArrayList<Integer> idQuestions=quizzs.getIDQuestionbyQuizz(idquiz);
         
-        //filter les question QCM
-        for(int i=0;i<idQuestions.size();i++){
-            int idQuestion=idQuestions.get(i);
-            //on verifier si cette question a des choix pour identifier si c'est QCM ou pas
-            if( Reponse.getReponsesByQuestionId(idQuestion).size() >0 ){
-                idQuestionsQCM.add(idQuestion);
-            }
-        }
-        //evaluer les question QCM
-        for(int idQuestion:idQuestionsQCM){
+        //evaluer les question
+        for(int idQuestion:idQuestions){
             int IdReponseQuiz=getIdReponseQuizByIdresultats(IdResultats);
             verifierQuestionQCM(idQuestion,IdReponseQuiz);
-        }
-
-    }
-
-    //evaluer les reponses d'une question et les stocker dans bdd
-    public void verifierQuestionQCM(int idQuestion, int IdReponseQuiz) throws SQLException {
-        //reponsesUtilisateur={A,B}
-        ArrayList<Integer> list_IdReponseQuestion= getIdReponseQuestion(IdReponseQuiz,idQuestion);
-        //reponsesPossibles={A,B,C,D}
-        List<Reponse> reponsesPossibles=Reponse.getReponsesByQuestionId(idQuestion);
-        //correct_reponse={B,C}
-        ArrayList<String> correct_reponse=new ArrayList<>();
-        int nb_correct = 0;
-        int nb_choix=reponsesPossibles.size();
-        int point = 0;
-        //pour savoir le point pour chaque correct choix
-        for(Reponse choix:reponsesPossibles){
-            if(choix.estCorrecte()){
-                correct_reponse.add(choix.getReponseText());
-            }
-        }
-        nb_correct=correct_reponse.size();
-        point=nb_correct/nb_choix; // 2/4=0.5 
-
-        //reponsesUtilisateur={A,B}
-        for(int IdReponseQuestion:list_IdReponseQuestion){
-            if(correct_reponse.contains(getReponseOfIdReponseQuestion(IdReponseQuestion))){
-                updatePoint(IdReponseQuestion, point);
-            }else{
-                updatePoint(IdReponseQuestion, -point);
-            }
         }
     }
 
  
+    /*stocker les reponses de user dans bdd*/
+     //1. quand user commence un entrainement,on ajouter les informations de cet entrainement dans resultats
+    public int saveReponseQuiz(int IdQuizz,int IdPerson,Time date){
+        int IdReponseQuiz=0;
+        String insertSQL = "INSERT INTO resultats (IdQuizz, IdPerson, note, date) VALUES (?, ?, 0.0, ?)";
+        String updateSQL = "UPDATE resultats SET IdReponseQuiz = IdResultats WHERE IdResultats = ?";
+        try (
+        Connection connection = connectMysql.getConnection();
+        PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
+        PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
+        ) {
+            insertStatement.setInt(1, IdQuizz);
+            insertStatement.setInt(2, IdPerson);
+            insertStatement.setTime(3, date);
+        
+            try (ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    IdReponseQuiz = generatedKeys.getInt("IdResultats");
+                    updateStatement.setInt(1, IdReponseQuiz);
+                    updateStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error during the insertion of the quiz response: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return IdReponseQuiz;
+    }
+
+    //2. user a fini une question,on va stocker ses reponses dans bdd et evaluer ses reponses
+    public void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuiz ) throws SQLException{
+        int IdReponsesQuestion =0;
+        String sql = "INSERT INTO reponse_quiz (IdReponseQuiz, IdQuestion) VALUES (?, ?)";
+
+        try (
+            Connection connection = connectMysql.getConnection();  
+            PreparedStatement statement = connection.prepareStatement(sql) 
+        ) {
+            statement.setInt(1, IdReponseQuiz);  
+            statement.setInt(2, IdQuestion);  
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    IdReponsesQuestion = generatedKeys.getInt(1); // Get the generated key
+                } 
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database error during the insertion of the quiz response: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        for(String reponse:ReponseQuiz){
+            saveReponseQuestion(IdReponsesQuestion,reponse);
+        }
+        verifierQuestionQCM(IdQuestion,IdReponseQuiz);
+
+    }
+    
+    public void saveReponseQuestion(int IdReponsesQuestion,String reponse){
+        String sql = "INSERT INTO reponse_question (IdReponsesQuestion, reponse) VALUES (?, ?)";
+
+        try (
+            Connection connection = connectMysql.getConnection(); 
+            PreparedStatement statement = connection.prepareStatement(sql) 
+        ) {
+            statement.setInt(1, IdReponsesQuestion);  
+            statement.setString(2, reponse);  
+        } catch (SQLException e) {
+            System.out.println("Database error during the insertion of the response: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //evaluer les reponses d'une question et les stocker dans bdd
+    public void verifierQuestionQCM(int idQuestion, int IdReponseQuiz) throws SQLException {
+    //reponsesUtilisateur={A,B}
+    ArrayList<Integer> list_IdReponseQuestion= getIdReponseQuestion(IdReponseQuiz,idQuestion);
+    //reponsesPossibles={A,B,C,D}
+    List<Reponse> reponsesPossibles=Reponse.getReponsesByQuestionId(idQuestion);
+    //correct_reponse={B,C}
+    ArrayList<String> correct_reponse=new ArrayList<>();
+    int nb_correct = 0;
+    int nb_choix=reponsesPossibles.size();
+    int point = 0;
+    //pour savoir le point pour chaque correct choix
+    for(Reponse choix:reponsesPossibles){
+        if(choix.estCorrecte()){
+            correct_reponse.add(choix.getReponseText());
+        }
+    }
+    nb_correct=correct_reponse.size();
+    point=nb_correct/nb_choix; // 2/4=0.5 
+
+    //reponsesUtilisateur={A,B}
+    for(int IdReponseQuestion:list_IdReponseQuestion){
+        if(correct_reponse.contains(getReponseOfIdReponseQuestion(IdReponseQuestion))){
+            updatePoint(IdReponseQuestion, point);
+        }else{
+            updatePoint(IdReponseQuestion, -point);
+        }
+    }
+}
+
 
     /*recuperer les donnes de bdd */
-
     //IdReponseQuestion -> une seule reponse A
     public  String getReponseOfIdReponseQuestion(int IdReponseQuestion) throws SQLException{
         String reponse = null;
@@ -311,17 +359,6 @@ public class Resultat {
         }
     }
     
-     //IdResultats->sum points des question
-     public int getPointOfSomeQuestions(int IdResultats,ArrayList<Integer> idQuestions) throws SQLException{
-        int note=0;
-        int IdReponseQuiz=getIdReponseQuizByIdresultats(IdResultats);
-        for(int idQuestion:idQuestions){
-            note+=getPointOfQuestion(IdReponseQuiz, idQuestion);
-        }
-        return note;
-       
-    }
-
     //update point de reponse
     public static void updatePoint(int IdReponseQuestion, float newPoint) throws SQLException {
         String sql = "UPDATE reponse_question SET point = ? WHERE IdReponseQuestion = ?";

@@ -6,6 +6,7 @@ import java.util.List;
 
 public class gestionnaire {
    
+    //update le point de questionNQCM dans bdd
     public void updatePointNQCM(int idQuestion, int IdResultats,int newpoint) throws SQLException {
 
         int IdReponseQuiz=Resultat.getIdquizzByIdresultats(IdResultats);
