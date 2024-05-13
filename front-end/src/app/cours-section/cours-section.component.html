@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<main>
+    <section *ngFor="let title of titles[id]; index as i">
+        <h1>{{title}}</h1>
+        <p>{{contents[id][i]}}</p>
+    </section>
+
+</main>
