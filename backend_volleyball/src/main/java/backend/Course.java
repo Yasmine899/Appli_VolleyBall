@@ -10,12 +10,14 @@ import java.util.List;
 public class Course {
     private String  course_description;
     private int  idChapitre;
+    private String title;
     private String Reference_id;
       public Course (){}
-      public Course (int course_id,String course_description,int idChapitre,String Reference_id){
+      public Course (int course_id,String title,String course_description,int idChapitre,String Reference_id){
         this.Reference_id=Reference_id;
         this.course_description=course_description;
         this.idChapitre=idChapitre;
+        this.title=title;
       }
 
     //Obtenir tous les courses par les chapitres
@@ -35,6 +37,7 @@ public class Course {
                 course.setCourse_description(resultSet.getString("course_description"));
                 course.setIdChapitre(idChapter);
                 course.setReference_id(resultSet.getString("Reference_id"));
+                course.setTitle(resultSet.getString("title"));
                 courseIds.add(course);
             }
             resultSet.close();
@@ -84,25 +87,41 @@ public class Course {
     public void setReference_id(String reference_id) {
         Reference_id = reference_id;
     }
-
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public String getCourse_description() {
+        return course_description;
+    }
+    public int getIdChapitre() {
+        return idChapitre;
+    }
+    public String getReference_id() {
+        return Reference_id;
+    }
     @Override
     public String toString() {
         
         return  "Course{\n" +
         "Reference ID= " + this.Reference_id +
+        "\ntitle= "+this.title+
         "\n, chapitre= " + this.idChapitre +
         ", Text='" + this.course_description +
         '}';
     }
    
-    public void insert_course(String  Reference_id, String course_description, int idChaptre){
+    public void insert_course(String  Reference_id,String title, String course_description, int idChaptre){
         try {
         Connection connection = connectMysql.getConnection();
-        String sql = "INSERT INTO courses (course_description, idChapitre,Reference_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO courses (course_description, idChapitre,Reference_id,title) VALUES (?, ?, ?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, course_description); 
         preparedStatement.setString(3,Reference_id); 
         preparedStatement.setInt(2, idChaptre); 
+        preparedStatement.setString(4,title);
         int rowsAffected = preparedStatement.executeUpdate();
         System.out.println("Rows affected: " + rowsAffected);
         
