@@ -12,7 +12,7 @@ import { CaracteristiquesDuJeuComponent } from '../caracteristiques-du-jeu/carac
   styleUrl: './cours.component.scss'
 })
 export class CoursComponent {
-  // Titles for the sections of the course
+  // Titles for the sections of the course, should get this from database
   titles: string[] = [
     "Caractéristiques du jeu",
     "PARTIE 1 - PHILOSOPHIE DES RÈGLES ET ARBITRAGE",

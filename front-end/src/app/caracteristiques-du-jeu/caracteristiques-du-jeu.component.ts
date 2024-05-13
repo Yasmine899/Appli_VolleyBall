@@ -8,5 +8,6 @@ import { Component, Input} from '@angular/core';
   styleUrl: './caracteristiques-du-jeu.component.scss'
 })
 export class CaracteristiquesDuJeuComponent {
-  @Input() title: string = "";
+  @Input() title: string = "Placeholder for title"; // Title of the section, should get this from database
+  @Input() content: string = "Placeholder for contents"; // Content of the section, should get this from database
 }
