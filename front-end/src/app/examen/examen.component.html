@@ -1,21 +1,30 @@
 <div id="container">
-    <h1>Examen</h1>
-    <p>Information sur l'examen...</p>
+    <h1>Examen final d'arbitre de volley-ball</h1>
+    <p id="description">
+      La page du examen vous permet de générer et d'imprimer des examens aléatoires pour une évaluation hors ligne. 
+      Ces examens se composent de 40 questions à choix multiples sélectionnées parmi tous les chapitres du cours. 
+      Cette fonctionnalité est conçue pour une utilisation hors ligne afin de faciliter les évaluations écrites.
+    </p>
+    <p id="nom">
+      Nom : ______________________________  Prenom : ______________________________
+    </p>
     <br>
-    <!--<button (click)="new_exam('exam_preview')">Générer un nouvel examen</button>-->
-    <button (click)="print_exam()">Print l'examen</button>
+    <button class="btn" (click)="new_exam()">Générer un nouvel examen</button>
+    <button class="btn" (click)="print_exam()">Print l'examen</button>
     <br>
-    <div #exam_preview>
-        <div *ngFor="let question of questions">
-            <h2>{{ question.statement }}</h2>
-            <ul>
-                <li *ngFor="let option of question.options; let i = index" class="listElem">
-                  <label class="option-label" for="`option-${index}`">
-                    <input type="checkbox" id="`option-${index}" class="option-checkbox">
-                    <span class="option-text">{{ option }}</span>
-                  </label>
-                </li>
-            </ul>
-        </div>
+    <div id="preview_border">
+      <div #exam_preview>
+          <div *ngFor="let question of questions">
+              <h2>{{ question.statement }}</h2>
+              <ul>
+                  <li *ngFor="let option of question.options; let i = index" class="listElem">
+                    <label class="option-label" for="`option-${index}`">
+                      <input type="checkbox" id="`option-${index}" class="option-checkbox" disabled>
+                      <span class="option-text">{{ option }}</span>
+                    </label>
+                  </li>
+              </ul>
+          </div>
+      </div>
     </div>
 </div>

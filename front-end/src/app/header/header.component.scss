@@ -56,3 +56,9 @@ header {
     padding: 1vw 2vw;
   }
 }
+
+@media print {
+  * {
+      display: none;
+  }
+}
