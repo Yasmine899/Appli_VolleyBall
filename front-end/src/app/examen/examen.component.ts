@@ -21,17 +21,14 @@ export class ExamenComponent {
     this.questions = this.questionService.getQuestions();
   }
 
-  /*new_exam(examen) {
-  }*/
+  new_exam() {
+  }
 
   print_exam() {
-    let printContents = this.exam_preview.nativeElement.innerHTML;
-    let originalContents = document.body.innerHTML;
-
-     document.body.innerHTML = printContents;
-
-     window.print();
-
-     document.body.innerHTML = originalContents;
+    console.log("print");
+    let title = document.title;
+    document.title = "Examen Final";
+    window.print();
+    document.title = title;
   }
 }

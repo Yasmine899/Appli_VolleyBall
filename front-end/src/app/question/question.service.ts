@@ -22,6 +22,36 @@ export class QuestionService {
       options: ["Peut importe", "De couleur claire", "De couleur foncée"],
       correctAnswers: [1]
     },
+    {
+      statement: "De quelle couleur doit-être la surface de jeu?",
+      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
+      correctAnswers: [1]
+    },
+    {
+      statement: "De quelle couleur doit-être la surface de jeu?",
+      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
+      correctAnswers: [1]
+    },
+    {
+      statement: "De quelle couleur doit-être la surface de jeu?",
+      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
+      correctAnswers: [1]
+    },
+    {
+      statement: "De quelle couleur doit-être la surface de jeu?",
+      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
+      correctAnswers: [1]
+    },
+    {
+      statement: "De quelle couleur doit-être la surface de jeu?",
+      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
+      correctAnswers: [1]
+    },
+    {
+      statement: "De quelle couleur doit-être la surface de jeu?",
+      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
+      correctAnswers: [1]
+    }
   ]; 
   
   constructor() { }

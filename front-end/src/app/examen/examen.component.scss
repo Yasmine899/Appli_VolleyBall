@@ -1,3 +1,46 @@
 .listElem {
     list-style-type: none;
 }
+
+#container {
+    margin: 15px;
+    margin-top: 50px;
+}
+
+.btn {
+    padding: 10px 20px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+#description {
+    width: 60%;
+}
+
+#nom {
+    display: none;
+}
+
+#preview_border {
+    padding: 10px 20px;
+    width: 60%;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+@media print {
+    #description, .btn {
+        display: none;
+    }
+    #preview_border {
+        border: none;
+    }
+    #nom {
+        display: block;
+    }
+}
