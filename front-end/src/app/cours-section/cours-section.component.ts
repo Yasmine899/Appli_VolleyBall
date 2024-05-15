@@ -5,7 +5,7 @@ import { ChapitreComponent } from '../chapitre/chapitre.component';
 
 type Chapter = {
   title: string, // The title of the chapter
-  intro: string, // The introduction paragraph of the chapter
+  intro: string[], // The introduction paragraphs of the chapter
   subTitles: string[], // The titles of the sections of the chapter
   contents: string[][] // The content of the chapter where one line represents a sections paragraphs
 };
@@ -40,13 +40,27 @@ export class CoursSectionComponent {
   @Input() chapters: Chapter[] = [
     {
       title: "Caractéristiques du jeu",
-      intro: "Introduction paragraph of the chapter",
+      intro: [
+        "Le Volleyball est un sport joué par deux équipes sur un terrain divisé par un filet. Il y a différentes versions disponibles pour offrir de la souplesse de jeu à tous.",
+        "Le but du jeu est d’envoyer le ballon par-dessus le filet afin qu’il retombe dans le terrain opposé et d’empêcher cette même action de la part des adversaires. L’équipe a droit à trois touches avant de renvoyer le ballon (en plus du contact effectué par le contre).",
+      ],
       subTitles: [],
       contents: [],
     },
     {
+      title: "PARTIE 1 - PHILOSOPHIE DES RÈGLES ET ARBITRAGE",
+      intro: [
+        "Les règles du jeu de volleyball sont établies par la Fédération Internationale de Volleyball (FIVB) et sont utilisées pour tous les niveaux de jeu, des compétitions internationales aux tournois locaux.",
+        "Les règles du jeu sont conçues pour garantir que le jeu est joué de manière juste et équitable pour tous les participants."
+      ],
+      subTitles: ["Le texte des règles"],
+      contents: [
+        ["Ce texte s’adresse à un large public de Volleyball – joueurs, entraîneurs, arbitres, spectateurs, commentateurs et autres – car la compréhension des règles permet de mieux jouer et d’obtenir une plus grande satisfaction personnelle; les entraîneurs peuvent créer une meilleure structure d’équipe et de meilleures tactiques, en donnant aux joueurs toute latitude pour déployer leurs talents, et la compréhension de la relation entre les règles écrites et les actions réelles sur le terrain permet aux officiels de prendre de meilleures décisions."],
+      ],
+    },
+    {
       title: "Chapitre 1",
-      intro: "",
+      intro: [],
       subTitles: ["Section 1", "Section 2", "Section 3"],
       contents: [
         ["First paragraph of section 1", "Second paragraph of section 1", "Third paragraph of section 1"],
@@ -56,7 +70,7 @@ export class CoursSectionComponent {
     },
     {
       title: "Chapitre 2",
-      intro: "",
+      intro: [],
       subTitles: ["Section 1", "Section 2", "Section 3"],
       contents: [
         ["First paragraph of section 1", "Second paragraph of section 1", "Third paragraph of section 1"],

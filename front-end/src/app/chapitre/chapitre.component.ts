@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 export class ChapitreComponent {
   @Input() title: string; // The title of the chapter
   hasIntroParagraph: boolean; // Whether the chapter has an introduction paragraph
-  @Input() introParagraph: string; // The introduction paragraph of the chapter
+  @Input() intro: string[]; // The introduction paragraphs of the chapter
 
   @Input() subSectionTitles: string[]; // The titles of the sections of the chapter
   @Input() content: string[]; // The content of the chapter

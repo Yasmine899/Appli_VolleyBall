@@ -1,0 +1,27 @@
+// Variables for colors and spacing
+$FFSU-Blue: #007DA0;
+$FFSU-Red: #D10019;
+$text-color: #333;
+$background-color: #ecf0f1;
+$spacing-unit: 16px;
+$font-stack: 'Arial', sans-serif;
+
+section {
+    margin-bottom: $spacing-unit * 2;
+    padding: $spacing-unit;
+    border-left: 4px solid $FFSU-Blue;
+    background-color: $background-color;
+    border-radius: 4px;
+    
+    h2 {
+      font-size: 1.8rem;
+      color: $FFSU-Red;
+      margin-bottom: $spacing-unit;
+    }
+    
+    p {
+      font-size: 1rem;
+      color: $text-color;
+      margin: 0 0 $spacing-unit 0;
+    }
+  }

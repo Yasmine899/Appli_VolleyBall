@@ -36,26 +36,6 @@ main {
         font-size: 2.5rem;
         margin-bottom: $spacing-unit;
     }
-  
-  section {
-    margin-bottom: $spacing-unit * 2;
-    padding: $spacing-unit;
-    border-left: 4px solid $FFSU-Blue;
-    background-color: $background-color;
-    border-radius: 4px;
-    
-    h2 {
-      font-size: 1.8rem;
-      color: $FFSU-Red;
-      margin-bottom: $spacing-unit;
-    }
-    
-    p {
-      font-size: 1rem;
-      color: $text-color;
-      margin: 0 0 $spacing-unit 0;
-    }
-  }
 }
 
 // Optional: Add some hover effects for sections
