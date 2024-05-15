@@ -31,7 +31,7 @@ public class Course {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-            idChapitres.add(resultSet.getInt("idChapitre);
+            idChapitres.add(resultSet.getInt("idChapitre"));
             }
             resultSet.close();
             statement.close();
@@ -42,7 +42,7 @@ public class Course {
         return idChapitres;
     }
     
-    //Obtenir tous les courses par les chapitres
+    //Obtenir tous les courses par les chapitresx
     public List<Course> getCoursesByChapterId(int idChapter) {
         List<Course> courseIds = new ArrayList<>();
         try{

@@ -123,7 +123,7 @@ public class quizzs {
     }
 
     //insert avec   quizz_question.insert_quizz_AllQuestion(idQuizz,idChapitre );
-    public void insert_quizz ( int idQuizz,int idChapitre, int scoreTotal){
+    public static void insert_quizz ( int idQuizz,int idChapitre, int scoreTotal){
         try {
          Connection connection = connectMysql.getConnection();
          String sql = "INSERT INTO quizzs (idQuizz,idChapitre, scoreTotal) VALUES (?,?,?)";

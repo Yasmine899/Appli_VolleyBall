@@ -1,20 +1,22 @@
 package backend;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;  
 
-import com.mysql.cj.xdevapi.Statement;
+
 
 
 public class Resultat {
  
     /* 4 retourner noteQuiz */
-    public float getNoteQuiz(int IdResultats) throws SQLException{
+    public static float getNoteQuiz(int IdResultats) throws SQLException{
         float note =0;  
         String sql = "SELECT note FROM resultats WHERE IdResultats = ?";
 
@@ -36,7 +38,7 @@ public class Resultat {
     }
 
     //3. quand user a fini ce quiz,on va calculer la note de quiz et update dans bdd
-    public void updateNoteQuiz(int IdResultats) throws SQLException{
+    public static  void updateNoteQuiz(int IdResultats) throws SQLException{
        
         int idquiz=getIdquizzByIdresultats(IdResultats);
         ArrayList<Integer> idQuestions=quizzs.getIDQuestionbyQuizz(idquiz);
@@ -69,22 +71,26 @@ public class Resultat {
 
 
      //1. quand user commence un entrainement,on ajouter les informations de cet entrainement dans resultats
-    public int commenceQuiz(int IdQuizz,int IdPerson,Time date) throws SQLException{
-        int IdReponseQuiz=0;
+    public static int commenceQuiz(int IdQuizz,int IdPerson) throws SQLException{
         int IdResultats = 0;
         String sql = "INSERT INTO resultats (IdQuizz, IdPerson, date) VALUES (?, ?, ?)";
 
-        try (
-            Connection connection = connectMysql.getConnection();  
-            PreparedStatement statement = connection.prepareStatement(sql)  
-        ) {
+        try {
+            Connection connection = connectMysql.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, IdQuizz);  
-            statement.setInt(2, IdPerson);  
-            statement.setTime(3, date);  
-
+            statement.setInt(2, IdPerson); 
+            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis()); 
+            statement.setDate(3, sqlDate);
+            statement.executeUpdate();
+ 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    // System.out.println("bien ajouter une donne dans tableau de resultats avec idquiz:"+IdQuizz);
                     IdResultats = generatedKeys.getInt(1);  
+                }
+                else{
+                    System.out.println("update pas reussi");
                 }
             }
             
@@ -92,12 +98,14 @@ public class Resultat {
             System.out.println("Database error during the quiz commencement: " + e.getMessage());
             e.printStackTrace();
         }
-        IdReponseQuiz=getIdReponseQuizByIdresultats(IdResultats);
-        return IdReponseQuiz;
+        updateIdReponseQuizByIdresultats(IdResultats);
+
+       
+        return IdResultats;
     }
 
      //2. user a fini une question,on va stocker ses reponses dans bdd et evaluer ses reponses
-    public void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuiz,float point ) throws SQLException{
+    public static void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuestion,float point ) throws SQLException{
         int IdReponsesQuestion =0;
         String sql = "INSERT INTO reponse_quiz (IdReponseQuiz, IdQuestion, point ) VALUES (?, ?, ?)";
 
@@ -120,14 +128,14 @@ public class Resultat {
             e.printStackTrace();
         }
         
-        for(String reponse:ReponseQuiz){
+        for(String reponse:ReponseQuestion){
             saveReponseQuestion(IdReponsesQuestion,reponse);
         }
        
 
     }
     
-    public void saveReponseQuestion(int IdReponsesQuestion,String reponse){
+    public static void saveReponseQuestion(int IdReponsesQuestion,String reponse){
         String sql = "INSERT INTO reponse_question (IdReponsesQuestion, reponse) VALUES (?, ?)";
 
         try (
@@ -230,7 +238,7 @@ public class Resultat {
     }
 
     //IdResultats -> IdReponseQuiz
-    public int getIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
+    public static int getIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
         int IdReponseQuiz = 0; 
         String sql = "SELECT IdReponseQuiz FROM resultats WHERE IdResultats = ?"; 
     
@@ -254,7 +262,7 @@ public class Resultat {
     }
 
     //IdReponseQuiz,idQuestion -> note d'une question
-    private float getNoteQuestionByIdQuestion(int IdReponseQuiz,int idQuestion) {
+    private static float getNoteQuestionByIdQuestion(int IdReponseQuiz,int idQuestion) {
         float point=0;
         String sql = "SELECT point FROM reponse_quiz WHERE IdReponseQuiz = ? AND IdQuestion = ?";
 
@@ -278,6 +286,51 @@ public class Resultat {
         
     }
 
+    public static void updateIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
+        String sql = "UPDATE resultats SET IdReponseQuiz = ? WHERE IdResultats = ?";
+
+        try (
+            Connection connection = connectMysql.getConnection();  
+            PreparedStatement statement = connection.prepareStatement(sql)  
+        ) {
+            statement.setInt(1, IdResultats);   
+            statement.setInt(2, IdResultats);   
+            // System.out.println("bien mise a jour IdReponseQuiz");
+        } catch (SQLException e) {
+            System.out.println("Database error during the update of IdReponseQuiz: " + e.getMessage());
+            e.printStackTrace();
+            throw e;  
+        }
+    } 
+    
+    public static void afficherResultat (int IdResultats){
+        String sql = "SELECT * FROM resultats WHERE IdResultats = ?";
+        try (
+            Connection connection = connectMysql.getConnection();   
+            PreparedStatement statement = connection.prepareStatement(sql)  
+        ) {
+            statement.setInt(1, IdResultats);   
+    
+            ResultSet resultSet = statement.executeQuery();  
+    
+            if (resultSet.next()) { 
+          
+                int idPerson = resultSet.getInt("IdPerson");
+                int idQuizz = resultSet.getInt("IdQuizz");
+                float note = resultSet.getFloat("note");
+                java.sql.Date date = resultSet.getDate("date");
+    
+                System.out.println("Resultat pour IdResultats " + IdResultats + ":");
+                System.out.println("IdPerson: " + idPerson +" , IdQuizz: " + idQuizz +" , Note: " + note + " , Date: " + date) ;
+            } else {
+                System.out.println("Aucun résultat trouvé pour IdResultats " + IdResultats);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error during the retrieval of the result: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     
 
 }
