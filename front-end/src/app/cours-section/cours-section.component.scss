@@ -37,10 +37,3 @@ main {
         margin-bottom: $spacing-unit;
     }
 }
-
-// Optional: Add some hover effects for sections
-section:hover {
-  background-color: lighten($FFSU-Blue, 40%);
-  border-color: $FFSU-Red;
-  transition: background-color 0.3s, border-color 0.3s;
-}

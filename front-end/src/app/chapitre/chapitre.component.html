@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="intro.length > 0">
     <p *ngFor="let paragraph of intro">{{paragraph}}</p>
 </section>
 <section *ngFor="let subSectionTitle of subSectionTitles">
