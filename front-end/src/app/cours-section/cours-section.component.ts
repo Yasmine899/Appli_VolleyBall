@@ -10,7 +10,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './cours-section.component.scss'
 })
 export class CoursSectionComponent {
+  // Id of the section, this is passed as a parameter in the URL
   id: number;
+  
   // Matrix of the subsection titles where one line represents a sections subsection titles, should get this from the database
   @Input() titles: string[][] = [
     ["Chapitre 1", "Chapitre 2", "Chapitre 3", "Chapitre 4"],
