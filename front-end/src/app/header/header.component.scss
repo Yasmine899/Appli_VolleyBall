@@ -17,10 +17,6 @@ header {
 
   .logo img {
     width: 10vw;
-
-    @media screen and (max-width: 768px) {
-      width: 8vw;
-    }
   }
 
   nav {
@@ -43,10 +39,6 @@ header {
           transition: color 0.3s ease;
           font-size: 1.7vw;
 
-          @media screen and (max-width: 768px) {
-            font-size: 1vw;
-          }
-
           &:hover {
             color: #8BDBEC;
           }
@@ -55,9 +47,7 @@ header {
     }
   }
 
-  @media screen and (max-width: 768px) {
-    padding: 1vw 2vw;
-  }
+
 }
 
 @media print {
