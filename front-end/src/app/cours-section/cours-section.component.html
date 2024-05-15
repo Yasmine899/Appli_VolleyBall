@@ -4,9 +4,8 @@
 <body>
     <main>
         <h1>{{sectionTitle}}</h1>
-        <section *ngFor="let title of titles[id]; index as i">
-            <h2>{{title}}</h2>
-            <p>{{contents[id][i]}}</p>
+        <section *ngFor="let chapter of chapters.slice(sectionChapters[id][1], sectionChapters[id][2]); index as i">
+            <app-chapitre [title]="chapter.title" [introParagraph]="chapter.intro" [subSectionTitles]="chapter.subTitles" [content]="chapter.contents[i]"></app-chapitre>
         </section>
     </main>
 </body>

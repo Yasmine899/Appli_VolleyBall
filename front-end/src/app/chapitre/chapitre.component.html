@@ -1,0 +1,7 @@
+<h2>{{title}}</h2>
+<p>{{introParagraph}}</p>
+<section *ngFor="let subSectionTitle of subSectionTitles">
+    <h3>{{subSectionTitle}}</h3>
+    <p *ngFor="let paragraph of content">{{paragraph}}</p>
+</section>
+
