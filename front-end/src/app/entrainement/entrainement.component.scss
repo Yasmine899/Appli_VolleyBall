@@ -1,28 +1,24 @@
 /* styles.css */
 
-.container {
-  display: inline;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .question-container {
   border: 1px solid #ccc;
-  border-radius: 5px;
   padding: 20px;
   margin-bottom: 20px;
-  width: 60%; /* Ajustez la largeur selon vos besoins */
+  @media screen and (max-width: 768px) {
+    padding: 1vw 2vw;
+  }
 }
 
-.option-label {
-  display: block;
-  margin-bottom: 10px;
-  cursor: pointer;
+.statement {
+  font-size: 3vw;
 }
 
-.option-text {
-  margin-left: 5px;
+.option-list {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 2vw;
 }
 
 .validate-button {
@@ -34,17 +30,14 @@
   cursor: pointer;
 }
 
-.progress-container {
-  margin-top: 20px;
+.validate-button:hover {
+  background-color: #0056b3;
 }
 
-.progress-bar {
-  width: 100%;
-  height: 20px;
-  border-radius: 10px;
+.correct {
+  color: green;
 }
 
-.progress-bar::-webkit-progress-value {
-  background-color: #007bff;
-  border-radius: 10px;
+.incorrect {
+  color: red;
 }
