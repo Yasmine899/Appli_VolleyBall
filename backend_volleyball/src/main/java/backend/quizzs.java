@@ -142,7 +142,7 @@ public class quizzs {
        
      }
 
-    public boolean Delete_quizz(int idQuizz){
+    public static boolean Delete_quizz(int idQuizz){
         boolean reussi =false;
         try {
         Connection connection = connectMysql.getConnection();

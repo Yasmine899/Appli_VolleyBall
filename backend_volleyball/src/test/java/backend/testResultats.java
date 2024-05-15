@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class testResultats {
-    login login=new login();
-    quizzs quizzs=new quizzs();
     int testIdQuizz=9999;
     int IdPerson;
     LocalDate localDate = LocalDate.now();
@@ -37,7 +35,7 @@ public class testResultats {
         IdResultats=Resultat.commenceQuiz(testIdQuizz, IdPerson);
     }
     @After
-    public void clean(){
+    public void clean() throws SQLException{
         //person
         backend.login.deletePerson(IdPerson);
 
@@ -46,7 +44,7 @@ public class testResultats {
         quizz_question.Delete_quizz_question(testIdQuizz);
 
         //resutats
-        //pas encore
+        Resultat.deleteResultat(IdResultats);
         
     }
 

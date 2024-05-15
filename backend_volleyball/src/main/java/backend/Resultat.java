@@ -211,7 +211,31 @@ public class Resultat {
         }
         return idList;
     }
+     
+    //IdReponseQuiz->list IdReponsesQuestion
+    public static ArrayList<Integer> getListIdReponseQuestion(int IdReponseQuiz){
+        
+        ArrayList<Integer> idList = new ArrayList<>();
+        String sql = "SELECT IdReponsesQuestion FROM reponse_quiz WHERE IdReponseQuiz = ?";
 
+        try (
+            Connection connection = connectMysql.getConnection();   
+            PreparedStatement statement = connection.prepareStatement(sql);  
+        ) {
+            statement.setInt(1, IdReponseQuiz);  
+
+            ResultSet resultSet = statement.executeQuery(); 
+            while (resultSet.next()) {
+                int id = resultSet.getInt("IdReponsesQuestion");   
+                idList.add(id);   
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error during the retrieval of IdReponsesQuestion: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return idList;   
+    }
 
     //IdResultats -> IdQuizz
     public static int getIdquizzByIdresultats(int IdResultats) throws SQLException {
@@ -329,6 +353,67 @@ public class Resultat {
             System.out.println("Database error during the retrieval of the result: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+
+    public static void deleteResultat(int IdResultats) throws SQLException{
+        int IdReponseQuiz=getIdquizzByIdresultats(IdResultats);
+        ArrayList<Integer> list_IdReponseQuestion=getListIdReponseQuestion(IdReponseQuiz);
+        for(int IdReponseQuestion:list_IdReponseQuestion){
+            //supprimer tous les reponses stocké
+            deleteReponsesQuestion(IdReponseQuestion);
+        }
+        //supprimer les reponsesQustion stocké
+        deleteReponseQuiz(IdReponseQuiz);
+       
+        //supprimer resultat
+        String sql = "DELETE FROM resultats WHERE IdResultats = ?";
+
+        try (
+            Connection connection = connectMysql.getConnection();   
+            PreparedStatement statement = connection.prepareStatement(sql);  
+        ) {
+            statement.setInt(1, IdResultats);   
+             statement.executeUpdate();   
+            
+        } catch (SQLException e) {
+            System.out.println("Database error during the deletion of responses: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void deleteReponseQuiz(int IdReponseQuiz){
+        String sql = "DELETE FROM reponse_quiz WHERE IdReponseQuiz = ?";
+
+        try (
+            Connection connection = connectMysql.getConnection();   
+            PreparedStatement statement = connection.prepareStatement(sql);  
+        ) {
+            statement.setInt(1, IdReponseQuiz);   
+             statement.executeUpdate();   
+            
+        } catch (SQLException e) {
+            System.out.println("Database error during the deletion of responses: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteReponsesQuestion(int IdReponsesQuestion){
+        String sql = "DELETE FROM reponse_question WHERE IdReponsesQuestion = ?";
+
+        try (
+            Connection connection = connectMysql.getConnection();   
+            PreparedStatement statement = connection.prepareStatement(sql);  
+        ) {
+            statement.setInt(1, IdReponsesQuestion);   
+             statement.executeUpdate();   
+            
+        } catch (SQLException e) {
+            System.out.println("Database error during the deletion of responses: " + e.getMessage());
+            e.printStackTrace();
+        }
+    
     }
     
     

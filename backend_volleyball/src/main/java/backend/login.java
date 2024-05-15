@@ -38,20 +38,88 @@ public class login {
         return idPerson;
     }
 
-    public void updateMdp(int IdPerson,String newmdp){
-
+    public void updateMdp(int IdPerson, String newmdp) {
+        String sql = "UPDATE login SET mdp = ? WHERE IdPerson = ?";
+    
+        try (Connection connection = connectMysql.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newmdp);
+            statement.setInt(2, IdPerson);
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Mot de passe mis à jour avec succès.");
+            } else {
+                System.out.println("Aucune mise à jour effectuée. Vérifiez l'ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur de base de données lors de la mise à jour du mot de passe: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+    
 
-    public void updatenom(int IdPerson,String newnom){
-
+    public void updatenom(int IdPerson, String newnom) {
+        String sql = "UPDATE login SET nom = ? WHERE IdPerson = ?";
+    
+        try (Connection connection = connectMysql.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newnom);
+            statement.setInt(2, IdPerson);
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Nom mis à jour avec succès.");
+            } else {
+                System.out.println("Aucune mise à jour effectuée. Vérifiez l'ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur de base de données lors de la mise à jour du nom: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+    
 
-    public void updateprenom(int IdPerson,String newprenom){
-
+    public void updateprenom(int IdPerson, String newprenom) {
+        String sql = "UPDATE login SET prenom = ? WHERE IdPerson = ?";
+    
+        try (Connection connection = connectMysql.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newprenom);
+            statement.setInt(2, IdPerson);
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Prénom mis à jour avec succès.");
+            } else {
+                System.out.println("Aucune mise à jour effectuée. Vérifiez l'ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur de base de données lors de la mise à jour du prénom: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
-    public void getIdperson(String nom,String prenom,String mdp){
-
+    
+    public int getIdperson(String nom, String prenom, String mdp) {
+        String sql = "SELECT IdPerson FROM login WHERE nom = ? AND prenom = ? AND mdp = ?";
+        int idPerson = 0;
+    
+        try (Connection connection = connectMysql.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, nom);
+            statement.setString(2, prenom);
+            statement.setString(3, mdp);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                idPerson = resultSet.getInt("IdPerson");
+                System.out.println("ID récupéré: " + idPerson);
+            } else {
+                System.out.println("Aucun utilisateur trouvé avec ces informations.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur de base de données lors de la récupération de l'ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return idPerson;
     }
+    
     public static String getNom(int IdPerson) {
         String sql = "SELECT nom FROM login WHERE IdPerson = ?";
         String nom=null;
