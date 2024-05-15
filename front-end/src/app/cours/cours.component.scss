@@ -23,22 +23,19 @@ body {
 }
 
 // Header styles
-header {
+h1 {
   background-color: $FFSU-Blue;
   padding: $spacing-unit;
   text-align: center;
   color: #fff;
-  
-  h1 {
-    font-size: 2rem;
-  }
+  font-size: 2rem;
 }
 
 // Main content styles
 main {
   margin: $spacing-unit auto;
   padding: $spacing-unit;
-  max-width: 800px;
+  max-width: 1200px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;

@@ -10,8 +10,19 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './cours-section.component.scss'
 })
 export class CoursSectionComponent {
-  // Id of the section, this is passed as a parameter in the URL
+  // The section title and id
+  sectionTitle: string;
   id: number;
+
+  // Titles for the sections of the course, should get this from database
+  sectionTitles: string[] = [
+    "Caractéristiques du jeu",
+    "PARTIE 1 - PHILOSOPHIE DES RÈGLES ET ARBITRAGE",
+    "PARTIE 2 - SECTION 1: LE JEU",
+    "PARTIE 2 - SECTION 2 - LES ARBITRES, LEURS RESPONSABILITÉS ET LES GESTES OFFICIELS",
+    "PARTIE 2 - SECTION 3: FIGURES",
+    "PARTIE 3: DÉFINITIONS"
+  ];
 
   // Matrix of the subsection titles where one line represents a sections subsection titles, should get this from the database
   @Input() titles: string[][] = [
@@ -28,11 +39,13 @@ export class CoursSectionComponent {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    if (this.route.snapshot.paramMap.get('id') === null) {
-      this.id = -1
+    if (this.route.snapshot.paramMap.get('section') === null) {
+      this.sectionTitle = "ERROR404"
+      this.id = -1;
     }
     else {
-      this.id = parseInt(this.route.snapshot.paramMap.get('id') as string);
+      this.sectionTitle = this.route.snapshot.paramMap.get('section') as string;
+      this.id = this.sectionTitles.indexOf(this.sectionTitle);
     }
   }
 

@@ -14,22 +14,29 @@ $font-stack: 'Arial', sans-serif;
 }
 
 body {
-  font-family: $font-stack;
-  background-color: $background-color;
-  color: $text-color;
-  line-height: 1.6;
-  padding: $spacing-unit;
-}
+    font-family: $font-stack;
+    background-color: $background-color;
+    color: $text-color;
+    line-height: 1.6;
+    padding: $spacing-unit;
+  }
 
 // Main content styles
 main {
   margin: $spacing-unit auto;
   padding: $spacing-unit;
-  max-width: 800px;
+  max-width: 1200px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 
+    // Title styles
+    h1 {
+        color: $FFSU-Blue;
+        font-size: 2.5rem;
+        margin-bottom: $spacing-unit;
+    }
+  
   section {
     margin-bottom: $spacing-unit * 2;
     padding: $spacing-unit;
@@ -37,7 +44,7 @@ main {
     background-color: $background-color;
     border-radius: 4px;
     
-    h1 {
+    h2 {
       font-size: 1.8rem;
       color: $FFSU-Red;
       margin-bottom: $spacing-unit;

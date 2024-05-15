@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'assistance', component: AssistanceComponent},
 
   // Path for cours-section component passing the id of the section
-  { path: 'cours/:id', component: CoursSectionComponent},
+  { path: 'cours/:section', component: CoursSectionComponent},
 
   // Add other paths here dont forget to import above
 ];

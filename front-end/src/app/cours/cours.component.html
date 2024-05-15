@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<header>
-    <h1>RÈGLES OFFICIELLES DE VOLLEYBALL</h1>
-</header>
-
-<main >
-        <a *ngFor="let title of titles; index as id" [routerLink]="['/cours', id]"><h2>{{title}}</h2></a>
-</main>
+<body>
+    <main >
+        <h1>RÈGLES OFFICIELLES DE VOLLEYBALL</h1>
+        <a *ngFor="let title of titles" [routerLink]="['/cours', title]"><h2>{{title}}</h2></a>
+    </main>
+</body>
