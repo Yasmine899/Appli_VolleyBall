@@ -16,8 +16,8 @@ import java.sql.Statement;
 public class Resultat {
  
     /* 4 retourner noteQuiz */
-    public static float getNoteQuiz(int IdResultats) throws SQLException{
-        float note =0;  
+    public static int getNoteQuiz(int IdResultats) throws SQLException{
+        int note =0;  
         String sql = "SELECT note FROM resultats WHERE IdResultats = ?";
 
         try (
@@ -28,7 +28,7 @@ public class Resultat {
 
             ResultSet resultSet = statement.executeQuery();  
             if (resultSet.next()) { 
-                note = resultSet.getFloat("note");  
+                note = resultSet.getInt("note");  
             }
         } catch (SQLException e) {
             System.out.println("Database error during the retrieval of the quiz note: " + e.getMessage());
@@ -42,8 +42,8 @@ public class Resultat {
        
         int idquiz=getIdquizzByIdresultats(IdResultats);
         ArrayList<Integer> idQuestions=quizzs.getIDQuestionbyQuizz(idquiz);
-        float pointQuestion=0;
-        float noteQuiz=0;
+        int pointQuestion=0;
+        int noteQuiz=0;
         int IdReponseQuiz=0;
 
         //calculer note de quiz
@@ -52,16 +52,21 @@ public class Resultat {
             pointQuestion=getNoteQuestionByIdQuestion(IdReponseQuiz,idQuestion);
             noteQuiz+=pointQuestion;
         }
+        System.out.println("noteQuiz doit etre: "+noteQuiz);
 
         //update
         String sql = "UPDATE resultats SET note = ? WHERE IdResultats = ?";
-
         try (
             Connection connection = connectMysql.getConnection();  
             PreparedStatement statement = connection.prepareStatement(sql)  
         ) {
-            statement.setFloat(1, noteQuiz);  
+            statement.setInt(1, noteQuiz);  
             statement.setInt(2, IdResultats); 
+            int affectedRows = statement.executeUpdate();  
+
+            if (affectedRows == 0) {
+                System.out.println("updateNoteQuiz() pas reussi");
+            }
         } catch (SQLException e) {
             System.out.println("Database error during the note update: " + e.getMessage());
             e.printStackTrace();
@@ -105,22 +110,26 @@ public class Resultat {
     }
 
      //2. user a fini une question,on va stocker ses reponses dans bdd et evaluer ses reponses
-    public static void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuestion,float point ) throws SQLException{
+    public static void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuestion,int point ) throws SQLException{
         int IdReponsesQuestion =0;
         String sql = "INSERT INTO reponse_quiz (IdReponseQuiz, IdQuestion, point ) VALUES (?, ?, ?)";
 
-        try (
+        try {
             Connection connection = connectMysql.getConnection();  
-            PreparedStatement statement = connection.prepareStatement(sql) 
-        ) {
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ;
             statement.setInt(1, IdReponseQuiz);  
             statement.setInt(2, IdQuestion); 
-            statement.setFloat(3, point);   
+            statement.setInt(3, point);   
+            int affectedRows = statement.executeUpdate(); 
 
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    IdReponsesQuestion = generatedKeys.getInt("IdReponseQuiz"); 
-                } 
+            if (affectedRows == 0) {
+                System.out.println("saveReponsesQuestion() pas reussi");
+            } else {
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    IdReponsesQuestion = resultSet.getInt(1);  
+                    System.out.println("bien update les reponses d'une question");
+                }
             }
             
         } catch (SQLException e) {
@@ -135,6 +144,8 @@ public class Resultat {
 
     }
     
+
+
     public static void saveReponseQuestion(int IdReponsesQuestion,String reponse){
         String sql = "INSERT INTO reponse_question (IdReponsesQuestion, reponse) VALUES (?, ?)";
 
@@ -266,15 +277,14 @@ public class Resultat {
         int IdReponseQuiz = 0; 
         String sql = "SELECT IdReponseQuiz FROM resultats WHERE IdResultats = ?"; 
     
-        try (
+        try {
             Connection connection = connectMysql.getConnection(); 
-            PreparedStatement statement = connection.prepareStatement(sql)  
-        ) {
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, IdResultats); 
             ResultSet resultSet = statement.executeQuery();  
     
             if (resultSet.next()) {  
-                IdReponseQuiz = resultSet.getInt("IdQuizz"); 
+                IdReponseQuiz = resultSet.getInt("IdReponseQuiz"); 
             }
         } catch (SQLException e) {
             System.out.println("Error in database operation: " + e.getMessage());
@@ -286,8 +296,8 @@ public class Resultat {
     }
 
     //IdReponseQuiz,idQuestion -> note d'une question
-    private static float getNoteQuestionByIdQuestion(int IdReponseQuiz,int idQuestion) {
-        float point=0;
+    private static int getNoteQuestionByIdQuestion(int IdReponseQuiz,int idQuestion) {
+        int point=0;
         String sql = "SELECT point FROM reponse_quiz WHERE IdReponseQuiz = ? AND IdQuestion = ?";
 
         try (
@@ -300,7 +310,7 @@ public class Resultat {
             ResultSet resultSet = statement.executeQuery();  
     
             if (resultSet.next()) {  
-                point = resultSet.getFloat("point");  
+                point = resultSet.getInt("point");  
             }
         } catch (SQLException e) {
             System.out.println("Database error during the retrieval of the question score: " + e.getMessage());
@@ -308,6 +318,32 @@ public class Resultat {
         }
         return point;
         
+    }
+
+    //idReponseQuiz,idQuestion->IdReponsesQuestion
+    private static int getIdReponsesQuestionByIdQuestion(int idReponseQuiz, int idQuestion) {
+        String sql = "SELECT IdReponsesQuestion FROM reponse_quiz WHERE IdReponseQuiz = ? AND IdQuestion = ?";
+        int idReponsesQuestion = -1; 
+
+        try {
+            Connection connection = connectMysql.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)  ;
+            statement.setInt(1, idReponseQuiz);
+            statement.setInt(2, idQuestion);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // If a record is found, retrieve the first column value assumed to be IdReponsesQuestion
+            if (resultSet.next()) {
+                idReponsesQuestion = resultSet.getInt("IdReponsesQuestion");
+            } else {
+                System.out.println("No entry found for IdReponseQuiz: " + idReponseQuiz + " and IdQuestion: " + idQuestion);
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Exception occurred while fetching IdReponsesQuestion: " + e.getMessage());
+            e.printStackTrace();
+        } 
+        return idReponsesQuestion;
     }
 
     public static void updateIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
@@ -341,7 +377,7 @@ public class Resultat {
           
                 int idPerson = resultSet.getInt("IdPerson");
                 int idQuizz = resultSet.getInt("IdQuizz");
-                float note = resultSet.getFloat("note");
+                int note = resultSet.getInt("note");
                 java.sql.Date date = resultSet.getDate("date");
     
                 System.out.println("Resultat pour IdResultats " + IdResultats + ":");
