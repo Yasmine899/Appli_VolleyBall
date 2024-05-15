@@ -1,6 +1,8 @@
+$spacing-unit: 16px;
+
 /* Styles pour le header */
 body {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Arial', sans-serif;
   font-style: normal;
 }
 
@@ -11,6 +13,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: $spacing-unit * 2;
 
   .logo img {
     width: 10vw;

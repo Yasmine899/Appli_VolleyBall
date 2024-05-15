@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cours de Volleyball</title>
-</head>
 
 <header>
     <h1>RÈGLES OFFICIELLES DE VOLLEYBALL</h1>
 </header>
 
 <main >
-        <a *ngFor="let title of titles; index as id" [routerLink]="['/cours-section', id]"><h2>{{title}}</h2></a>
+        <a *ngFor="let title of titles; index as id" [routerLink]="['/cours', id]"><h2>{{title}}</h2></a>
 </main>

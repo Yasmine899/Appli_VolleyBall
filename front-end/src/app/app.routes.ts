@@ -12,13 +12,13 @@ export const routes: Routes = [
   // Redirect to /cours when the app is loaded
   { path: '', redirectTo: '/cours', pathMatch: 'full' },
   
-  { path: 'cours', component: CoursComponent },
+  { path: 'cours',  component: CoursComponent },
   { path: 'entrainement', component: EntrainementComponent},
   { path: 'examen', component: ExamenComponent},
   { path: 'assistance', component: AssistanceComponent},
 
   // Path for cours-section component passing the id of the section
-  { path: 'cours-section/:id', component: CoursSectionComponent},
+  { path: 'cours/:id', component: CoursSectionComponent},
 
   // Add other paths here dont forget to import above
 ];
