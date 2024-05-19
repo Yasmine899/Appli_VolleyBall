@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { EntrainementComponent } from './entrainement/entrainement.component';
 import { ExamenComponent } from './examen/examen.component';
+import { LoginComponent } from './login/login.component';
 import { AssistanceComponent } from "./assistance/assistance.component";
 
 // Importes for for courses
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'cours', component: CoursComponent },
   { path: 'entrainement', component: EntrainementComponent},
   { path: 'examen', component: ExamenComponent},
+  { path: 'login', component: LoginComponent},
   { path: 'assistance', component: AssistanceComponent},
   { path: '', component: LandingPageComponent},
 
