@@ -1,0 +1,39 @@
+// Variables for colors and spacing
+$FFSU-Blue: #007DA0;
+$FFSU-Red: #D10019;
+$text-color: #333;
+$background-color: #ecf0f1;
+$spacing-unit: 16px;
+$font-stack: 'Arial', sans-serif;
+
+// General reset and typography
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+    font-family: $font-stack;
+    background-color: $background-color;
+    color: $text-color;
+    line-height: 1.6;
+    padding: $spacing-unit;
+  }
+
+// Main content styles
+main {
+  margin: $spacing-unit auto;
+  padding: $spacing-unit;
+  max-width: 1200px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+    // Title styles
+    h1 {
+        color: $FFSU-Blue;
+        font-size: 2.5rem;
+        margin-bottom: $spacing-unit;
+    }
+}

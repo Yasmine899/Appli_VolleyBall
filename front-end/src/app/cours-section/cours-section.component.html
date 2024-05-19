@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<main>
-    <section *ngFor="let title of titles[id]; index as i">
-        <h1>{{title}}</h1>
-        <p>{{contents[id][i]}}</p>
-    </section>
-
-</main>
+<body>
+    <main>
+        <h1>{{sectionTitle}}</h1>
+        <section *ngFor="let chapter of chapters.slice(sectionChapters[id][1], sectionChapters[id][2]); index as i">
+            <app-chapitre [title]="chapter.title" [intro]="chapter.intro" [subSectionTitles]="chapter.subTitles" [content]="chapter.contents[i]"></app-chapitre>
+        </section>
+    </main>
+</body>
