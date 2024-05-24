@@ -1,26 +1,15 @@
 package backend;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import backend.Service.QuestionService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public class Main
-{
-    public static void main( String[] args )
-    {
-        // Test de la connexion à la base de données
-        Connection connection = connectMysql.getConnection();
+public class Main {
 
-        if(connection != null) {
-            System.out.println("Connexion à la base de données réussie !");
-            // Vous pouvez ajouter ici d'autres opérations sur la base de données si nécessaire
-            // Assurez-vous de fermer la connexion lorsque vous avez terminé
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println("Erreur lors de la fermeture de la connexion : " + e.getMessage());
-            }
-        } else {
-            System.out.println("La connexion à la base de données a échoué.");
-        }
+    public static void main(String[] args) {
+
+        QuestionService questionService = new QuestionService();
+        System.out.println(QuestionService.getQuestionsByChapter(1));
     }
+
 }

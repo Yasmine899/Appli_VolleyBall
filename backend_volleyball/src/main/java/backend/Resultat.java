@@ -1,23 +1,21 @@
 package backend;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Statement;  
 
-
+import com.mysql.cj.xdevapi.Statement;
 
 
 public class Resultat {
  
     /* 4 retourner noteQuiz */
-    public static int getNoteQuiz(int IdResultats) throws SQLException{
-        int note =0;  
+    public float getNoteQuiz(int IdResultats) throws SQLException{
+        float note =0;  
         String sql = "SELECT note FROM resultats WHERE IdResultats = ?";
 
         try (
@@ -28,7 +26,7 @@ public class Resultat {
 
             ResultSet resultSet = statement.executeQuery();  
             if (resultSet.next()) { 
-                note = resultSet.getInt("note");  
+                note = resultSet.getFloat("note");  
             }
         } catch (SQLException e) {
             System.out.println("Database error during the retrieval of the quiz note: " + e.getMessage());
@@ -38,12 +36,12 @@ public class Resultat {
     }
 
     //3. quand user a fini ce quiz,on va calculer la note de quiz et update dans bdd
-    public static  void updateNoteQuiz(int IdResultats) throws SQLException{
+    public void updateNoteQuiz(int IdResultats) throws SQLException{
        
         int idquiz=getIdquizzByIdresultats(IdResultats);
         ArrayList<Integer> idQuestions=quizzs.getIDQuestionbyQuizz(idquiz);
-        int pointQuestion=0;
-        int noteQuiz=0;
+        float pointQuestion=0;
+        float noteQuiz=0;
         int IdReponseQuiz=0;
 
         //calculer note de quiz
@@ -52,21 +50,16 @@ public class Resultat {
             pointQuestion=getNoteQuestionByIdQuestion(IdReponseQuiz,idQuestion);
             noteQuiz+=pointQuestion;
         }
-        System.out.println("noteQuiz doit etre: "+noteQuiz);
 
         //update
         String sql = "UPDATE resultats SET note = ? WHERE IdResultats = ?";
+
         try (
             Connection connection = connectMysql.getConnection();  
             PreparedStatement statement = connection.prepareStatement(sql)  
         ) {
-            statement.setInt(1, noteQuiz);  
+            statement.setFloat(1, noteQuiz);  
             statement.setInt(2, IdResultats); 
-            int affectedRows = statement.executeUpdate();  
-
-            if (affectedRows == 0) {
-                System.out.println("updateNoteQuiz() pas reussi");
-            }
         } catch (SQLException e) {
             System.out.println("Database error during the note update: " + e.getMessage());
             e.printStackTrace();
@@ -76,26 +69,22 @@ public class Resultat {
 
 
      //1. quand user commence un entrainement,on ajouter les informations de cet entrainement dans resultats
-    public static int commenceQuiz(int IdQuizz,int IdPerson) throws SQLException{
+    public int commenceQuiz(int IdQuizz,int IdPerson,Time date) throws SQLException{
+        int IdReponseQuiz=0;
         int IdResultats = 0;
         String sql = "INSERT INTO resultats (IdQuizz, IdPerson, date) VALUES (?, ?, ?)";
 
-        try {
-            Connection connection = connectMysql.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        try (
+            Connection connection = connectMysql.getConnection();  
+            PreparedStatement statement = connection.prepareStatement(sql)  
+        ) {
             statement.setInt(1, IdQuizz);  
-            statement.setInt(2, IdPerson); 
-            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis()); 
-            statement.setDate(3, sqlDate);
-            statement.executeUpdate();
- 
+            statement.setInt(2, IdPerson);  
+            statement.setTime(3, date);  
+
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    // System.out.println("bien ajouter une donne dans tableau de resultats avec idquiz:"+IdQuizz);
                     IdResultats = generatedKeys.getInt(1);  
-                }
-                else{
-                    System.out.println("update pas reussi");
                 }
             }
             
@@ -103,33 +92,27 @@ public class Resultat {
             System.out.println("Database error during the quiz commencement: " + e.getMessage());
             e.printStackTrace();
         }
-        updateIdReponseQuizByIdresultats(IdResultats);
-
-       
-        return IdResultats;
+        IdReponseQuiz=getIdReponseQuizByIdresultats(IdResultats);
+        return IdReponseQuiz;
     }
 
      //2. user a fini une question,on va stocker ses reponses dans bdd et evaluer ses reponses
-    public static void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuestion,int point ) throws SQLException{
+    public void saveReponsesQuestion(int IdReponseQuiz,int IdQuestion,ArrayList<String> ReponseQuiz,float point ) throws SQLException{
         int IdReponsesQuestion =0;
         String sql = "INSERT INTO reponse_quiz (IdReponseQuiz, IdQuestion, point ) VALUES (?, ?, ?)";
 
-        try {
+        try (
             Connection connection = connectMysql.getConnection();  
-            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ;
+            PreparedStatement statement = connection.prepareStatement(sql) 
+        ) {
             statement.setInt(1, IdReponseQuiz);  
             statement.setInt(2, IdQuestion); 
-            statement.setInt(3, point);   
-            int affectedRows = statement.executeUpdate(); 
+            statement.setFloat(3, point);   
 
-            if (affectedRows == 0) {
-                System.out.println("saveReponsesQuestion() pas reussi");
-            } else {
-                ResultSet resultSet = statement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    IdReponsesQuestion = resultSet.getInt(1);  
-                    System.out.println("bien update les reponses d'une question");
-                }
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    IdReponsesQuestion = generatedKeys.getInt("IdReponseQuiz"); 
+                } 
             }
             
         } catch (SQLException e) {
@@ -137,16 +120,14 @@ public class Resultat {
             e.printStackTrace();
         }
         
-        for(String reponse:ReponseQuestion){
+        for(String reponse:ReponseQuiz){
             saveReponseQuestion(IdReponsesQuestion,reponse);
         }
        
 
     }
     
-
-
-    public static void saveReponseQuestion(int IdReponsesQuestion,String reponse){
+    public void saveReponseQuestion(int IdReponsesQuestion,String reponse){
         String sql = "INSERT INTO reponse_question (IdReponsesQuestion, reponse) VALUES (?, ?)";
 
         try (
@@ -222,31 +203,7 @@ public class Resultat {
         }
         return idList;
     }
-     
-    //IdReponseQuiz->list IdReponsesQuestion
-    public static ArrayList<Integer> getListIdReponseQuestion(int IdReponseQuiz){
-        
-        ArrayList<Integer> idList = new ArrayList<>();
-        String sql = "SELECT IdReponsesQuestion FROM reponse_quiz WHERE IdReponseQuiz = ?";
 
-        try (
-            Connection connection = connectMysql.getConnection();   
-            PreparedStatement statement = connection.prepareStatement(sql);  
-        ) {
-            statement.setInt(1, IdReponseQuiz);  
-
-            ResultSet resultSet = statement.executeQuery(); 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("IdReponsesQuestion");   
-                idList.add(id);   
-            }
-        } catch (SQLException e) {
-            System.out.println("Database error during the retrieval of IdReponsesQuestion: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return idList;   
-    }
 
     //IdResultats -> IdQuizz
     public static int getIdquizzByIdresultats(int IdResultats) throws SQLException {
@@ -273,18 +230,19 @@ public class Resultat {
     }
 
     //IdResultats -> IdReponseQuiz
-    public static int getIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
+    public int getIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
         int IdReponseQuiz = 0; 
         String sql = "SELECT IdReponseQuiz FROM resultats WHERE IdResultats = ?"; 
     
-        try {
+        try (
             Connection connection = connectMysql.getConnection(); 
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql)  
+        ) {
             statement.setInt(1, IdResultats); 
             ResultSet resultSet = statement.executeQuery();  
     
             if (resultSet.next()) {  
-                IdReponseQuiz = resultSet.getInt("IdReponseQuiz"); 
+                IdReponseQuiz = resultSet.getInt("IdQuizz"); 
             }
         } catch (SQLException e) {
             System.out.println("Error in database operation: " + e.getMessage());
@@ -296,8 +254,8 @@ public class Resultat {
     }
 
     //IdReponseQuiz,idQuestion -> note d'une question
-    private static int getNoteQuestionByIdQuestion(int IdReponseQuiz,int idQuestion) {
-        int point=0;
+    private float getNoteQuestionByIdQuestion(int IdReponseQuiz,int idQuestion) {
+        float point=0;
         String sql = "SELECT point FROM reponse_quiz WHERE IdReponseQuiz = ? AND IdQuestion = ?";
 
         try (
@@ -310,7 +268,7 @@ public class Resultat {
             ResultSet resultSet = statement.executeQuery();  
     
             if (resultSet.next()) {  
-                point = resultSet.getInt("point");  
+                point = resultSet.getFloat("point");  
             }
         } catch (SQLException e) {
             System.out.println("Database error during the retrieval of the question score: " + e.getMessage());
@@ -320,138 +278,6 @@ public class Resultat {
         
     }
 
-    //idReponseQuiz,idQuestion->IdReponsesQuestion
-    private static int getIdReponsesQuestionByIdQuestion(int idReponseQuiz, int idQuestion) {
-        String sql = "SELECT IdReponsesQuestion FROM reponse_quiz WHERE IdReponseQuiz = ? AND IdQuestion = ?";
-        int idReponsesQuestion = -1; 
-
-        try {
-            Connection connection = connectMysql.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)  ;
-            statement.setInt(1, idReponseQuiz);
-            statement.setInt(2, idQuestion);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            // If a record is found, retrieve the first column value assumed to be IdReponsesQuestion
-            if (resultSet.next()) {
-                idReponsesQuestion = resultSet.getInt("IdReponsesQuestion");
-            } else {
-                System.out.println("No entry found for IdReponseQuiz: " + idReponseQuiz + " and IdQuestion: " + idQuestion);
-            }
-        } catch (SQLException e) {
-            System.err.println("SQL Exception occurred while fetching IdReponsesQuestion: " + e.getMessage());
-            e.printStackTrace();
-        } 
-        return idReponsesQuestion;
-    }
-
-    public static void updateIdReponseQuizByIdresultats(int IdResultats) throws SQLException {
-        String sql = "UPDATE resultats SET IdReponseQuiz = ? WHERE IdResultats = ?";
-
-        try (
-            Connection connection = connectMysql.getConnection();  
-            PreparedStatement statement = connection.prepareStatement(sql)  
-        ) {
-            statement.setInt(1, IdResultats);   
-            statement.setInt(2, IdResultats);   
-            // System.out.println("bien mise a jour IdReponseQuiz");
-        } catch (SQLException e) {
-            System.out.println("Database error during the update of IdReponseQuiz: " + e.getMessage());
-            e.printStackTrace();
-            throw e;  
-        }
-    } 
-    
-    public static void afficherResultat (int IdResultats){
-        String sql = "SELECT * FROM resultats WHERE IdResultats = ?";
-        try (
-            Connection connection = connectMysql.getConnection();   
-            PreparedStatement statement = connection.prepareStatement(sql)  
-        ) {
-            statement.setInt(1, IdResultats);   
-    
-            ResultSet resultSet = statement.executeQuery();  
-    
-            if (resultSet.next()) { 
-          
-                int idPerson = resultSet.getInt("IdPerson");
-                int idQuizz = resultSet.getInt("IdQuizz");
-                int note = resultSet.getInt("note");
-                java.sql.Date date = resultSet.getDate("date");
-    
-                System.out.println("Resultat pour IdResultats " + IdResultats + ":");
-                System.out.println("IdPerson: " + idPerson +" , IdQuizz: " + idQuizz +" , Note: " + note + " , Date: " + date) ;
-            } else {
-                System.out.println("Aucun résultat trouvé pour IdResultats " + IdResultats);
-            }
-        } catch (SQLException e) {
-            System.out.println("Database error during the retrieval of the result: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-
-    public static void deleteResultat(int IdResultats) throws SQLException{
-        int IdReponseQuiz=getIdquizzByIdresultats(IdResultats);
-        ArrayList<Integer> list_IdReponseQuestion=getListIdReponseQuestion(IdReponseQuiz);
-        for(int IdReponseQuestion:list_IdReponseQuestion){
-            //supprimer tous les reponses stocké
-            deleteReponsesQuestion(IdReponseQuestion);
-        }
-        //supprimer les reponsesQustion stocké
-        deleteReponseQuiz(IdReponseQuiz);
-       
-        //supprimer resultat
-        String sql = "DELETE FROM resultats WHERE IdResultats = ?";
-
-        try (
-            Connection connection = connectMysql.getConnection();   
-            PreparedStatement statement = connection.prepareStatement(sql);  
-        ) {
-            statement.setInt(1, IdResultats);   
-             statement.executeUpdate();   
-            
-        } catch (SQLException e) {
-            System.out.println("Database error during the deletion of responses: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void deleteReponseQuiz(int IdReponseQuiz){
-        String sql = "DELETE FROM reponse_quiz WHERE IdReponseQuiz = ?";
-
-        try (
-            Connection connection = connectMysql.getConnection();   
-            PreparedStatement statement = connection.prepareStatement(sql);  
-        ) {
-            statement.setInt(1, IdReponseQuiz);   
-             statement.executeUpdate();   
-            
-        } catch (SQLException e) {
-            System.out.println("Database error during the deletion of responses: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public static void deleteReponsesQuestion(int IdReponsesQuestion){
-        String sql = "DELETE FROM reponse_question WHERE IdReponsesQuestion = ?";
-
-        try (
-            Connection connection = connectMysql.getConnection();   
-            PreparedStatement statement = connection.prepareStatement(sql);  
-        ) {
-            statement.setInt(1, IdReponsesQuestion);   
-             statement.executeUpdate();   
-            
-        } catch (SQLException e) {
-            System.out.println("Database error during the deletion of responses: " + e.getMessage());
-            e.printStackTrace();
-        }
-    
-    }
-    
     
 
 }
