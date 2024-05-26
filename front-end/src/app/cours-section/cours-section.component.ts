@@ -17,6 +17,7 @@ export class CoursSectionComponent implements OnInit{
   // The section title and id
   sectionTitle: string;
   sectionId: number;
+  containingChapters: number[];
 
 
   constructor(private route: ActivatedRoute, private coursApiConnectService: CoursApiConnectService) { }
@@ -29,11 +30,21 @@ export class CoursSectionComponent implements OnInit{
     else {
       console.error("No section title found in URL");
     }
-    }
 
-    /*console.log("Getting section" + this.sectionId + " data from API...");
-    this.coursApiConnectService.getSectionId(this.sectionTitle).subscribe((data) => {
-      this.chapitreData = data;
-    });*/
+    // Gets the section id from the API
+    this.coursApiConnectService.getCoursSections().subscribe((coursSectionsData : any) => {
+      for (let i = 0; i < coursSectionsData.length; i++) {
+        if (coursSectionsData[i].description == this.sectionTitle) {
+          this.sectionId = coursSectionsData[i].id;
+          break;
+        }
+      }
 
+      // Gets the list of chapters for this section
+      this.coursApiConnectService.getSectionChapters(this.sectionId).subscribe((data : any) => {
+        this.containingChapters = data;
+      });
+
+    });
   }
+}

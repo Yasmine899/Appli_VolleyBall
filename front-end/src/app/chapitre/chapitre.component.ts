@@ -13,6 +13,7 @@ import {CoursApiConnectService} from '../cours-api-connect.service';
 export class ChapitreComponent implements OnInit {
   @Input() chapitreId: number;
   chapitreData: any;
+  showChapitreTitle: boolean;
 
 
  constructor(private coursApiConnectService: CoursApiConnectService) { }
@@ -22,5 +23,7 @@ export class ChapitreComponent implements OnInit {
     this.coursApiConnectService.getCoursChapter(this.chapitreId).subscribe((data) => {
       this.chapitreData = data;
     });
+
+    this.showChapitreTitle = this.chapitreId > 0 && this.chapitreId < 99 ? true : false;
   }
 }

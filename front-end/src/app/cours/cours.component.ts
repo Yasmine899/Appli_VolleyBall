@@ -1,22 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CoursApiConnectService } from '../cours-api-connect.service';
 
 @Component({
   selector: 'app-cours',
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './cours.component.html',
-  styleUrl: './cours.component.scss'
+  styleUrl: './cours.component.scss',
+  providers: [CoursApiConnectService]
 })
-export class CoursComponent {
+export class CoursComponent implements OnInit{
   // Titles for the sections of the course, should get this from database
-  titles: string[] = [
-    "Caractéristiques du jeu",
-    "PARTIE 1 - PHILOSOPHIE DES RÈGLES ET ARBITRAGE",
-    "PARTIE 2 - SECTION 1: LE JEU",
-    "PARTIE 2 - SECTION 2 - LES ARBITRES, LEURS RESPONSABILITÉS ET LES GESTES OFFICIELS",
-    "PARTIE 2 - SECTION 3: FIGURES",
-    "PARTIE 3: DÉFINITIONS"
-  ];
+  titles: string[] = [];
+
+  constructor(private coursApiConnectService: CoursApiConnectService){}
+  
+  ngOnInit(): void {
+    console.log("Getting course section titles from API...");
+    this.coursApiConnectService.getCoursSections().subscribe((coursSectionsData : any) => {
+      for (let i = 0; i < coursSectionsData.length; i++) {
+        this.titles.push(coursSectionsData[i].description);
+      }
+    });
+  }
 }
