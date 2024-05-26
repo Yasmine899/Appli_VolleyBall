@@ -11,9 +11,12 @@ import {CoursApiConnectService} from '../cours-api-connect.service';
   providers: [CoursApiConnectService]
 })
 export class ChapitreComponent implements OnInit {
+  readonly FIGURE_CHAPITRE_ID: number = 9; // Chapitre 9 is the figure chapter
+
   @Input() chapitreId: number;
   chapitreData: any;
   showChapitreTitle: boolean;
+  isFigureChapitre: boolean; // A figure chapitre is a chapter the contains all the figures
 
 
  constructor(private coursApiConnectService: CoursApiConnectService) { }
@@ -25,5 +28,6 @@ export class ChapitreComponent implements OnInit {
     });
 
     this.showChapitreTitle = this.chapitreId > 0 && this.chapitreId < 99 ? true : false;
+    this.isFigureChapitre = this.chapitreId == this.FIGURE_CHAPITRE_ID ? true : false;
   }
 }

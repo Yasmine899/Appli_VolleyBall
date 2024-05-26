@@ -1,8 +1,19 @@
-<h2 *ngIf="showChapitreTitle" id="Chapitre{{chapitreId}}">Chapitre {{chapitreId}}</h2>
+<div *ngIf="!isFigureChapitre">
+    <h2 *ngIf="showChapitreTitle" id="Chapitre{{chapitreId}}">Chapitre {{chapitreId}}</h2>
 <section *ngFor="let chapitreSection of chapitreData">
     <h3 *ngIf="showChapitreTitle" id="{{chapitreSection.reference_id}}">{{chapitreSection.reference_id}} - {{chapitreSection.title}}</h3>
     <h3 *ngIf="!showChapitreTitle">{{chapitreSection.title}}</h3>
     <p>{{chapitreSection.course_description}}</p>
 </section>
+</div>
+
+<div *ngIf="isFigureChapitre">
+    <section *ngFor="let chapitreSection of chapitreData" style="margin-bottom: 20px;">
+
+        <figure style="margin: 0 auto; max-width: 600px; text-align: center;">
+            <img id="{{chapitreSection.course_description}}" [src]="'assets/' + chapitreSection.course_description" alt="{{chapitreSection.course_description}}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        </figure>
+    </section>    
+</div>
 
 

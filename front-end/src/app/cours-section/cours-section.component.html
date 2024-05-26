@@ -3,9 +3,9 @@
 
 <body>
     <main>
-        <section *ngIf="showTableofContents" class="table-of-contents">
+        <section>
             <h1>{{ sectionTitle }}</h1>
-            <nav>
+            <nav *ngIf="showTableofContents" class="table-of-contents">
                 <ul>
                     <li *ngFor="let chapter of containingChapters">
                         <a href="./cours/{{ sectionTitle }}#Chapitre{{ chapter }}">Chapitre {{ chapter }}</a>

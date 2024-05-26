@@ -46,9 +46,9 @@ export class CoursSectionComponent implements OnInit{
       this.coursApiConnectService.getSectionChapters(this.sectionId).subscribe((data : any) => {
         this.containingChapters = data;
 
-        // If there are chapters in this section between 1 and 98, show the table of contents
+        // If there are chapters in this section between 1 and 98, show the table of contents, unless it's the figure chapter (9)
         for (let i = 0; i < this.containingChapters.length; i++) {
-          if (this.containingChapters[i] > 0 && this.containingChapters[i] < 99) {
+          if (this.containingChapters[i] > 0 && this.containingChapters[i] < 99 && this.containingChapters[i] != 9) {
             this.showTableofContents = true;
             break;
           }
