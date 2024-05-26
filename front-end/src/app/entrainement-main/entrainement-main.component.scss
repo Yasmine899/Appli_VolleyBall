@@ -1,0 +1,63 @@
+// Variables for colors and spacing
+$FFSU-Blue: #007DA0;
+$FFSU-Red: #D10019;
+$text-color: #333;
+$background-color: #ecf0f1;
+$link-color: $FFSU-Blue;
+$spacing-unit: 16px;
+$font-stack: 'Arial', sans-serif;
+
+// General reset and typography
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-stack;
+  background-color: $background-color;
+  color: $text-color;
+  line-height: 1.6;
+  padding: $spacing-unit;
+}
+
+// Header styles
+h1 {
+  background-color: $FFSU-Blue;
+  padding: $spacing-unit;
+  text-align: center;
+  color: #fff;
+  font-size: 2rem;
+}
+
+// Main content styles
+main {
+  margin: $spacing-unit auto;
+  padding: $spacing-unit;
+  max-width: 1200px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  a {
+    display: block;
+    text-decoration: none;
+    color: $link-color;
+    margin: $spacing-unit 0;
+    padding: $spacing-unit;
+    border: 1px solid $FFSU-Blue;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+
+    &:hover {
+      background-color: $FFSU-Blue;
+      color: #fff;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+  }
+}

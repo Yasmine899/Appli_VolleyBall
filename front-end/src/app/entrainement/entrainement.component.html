@@ -1,28 +1,20 @@
 <!-- entrainement.component.html -->
 
-<div class="container">
-
-  <div *ngIf="responseMode" class="response-container">
-    <h2>{{ result }}</h2>
+<div *ngIf="currentQuestion">
+  <h2>{{ currentQuestion.questionText }}</h2>
+  <!--
+  <div *ngFor="let answer of loadAnswers():; let i = index">
+    <input type="checkbox" [id]="'answer' + i" [disabled]="responseMode">
+    <label [for]="'answer' + i" [ngClass]="getOptionClasses(i)">{{ answer.response_text }}</label>
   </div>
-
-  <div *ngIf="currentQuestion" class="question-container">
-    <h2 class="statement" style="text-align:center">{{ currentQuestion.statement }}</h2>
-    <ul class="option-list">
-      <li *ngFor="let option of currentQuestion.options; let i = index" style="list-style-type: none;">
-        <label [ngClass]="getOptionClasses(i)" for="`option-${index}`">
-          <input type="checkbox" id="`option-${index}" class="option-checkbox">
-          <span class="option-text">{{ option }}</span>
-        </label>
-      </li>
-    </ul>
-    <button class="validate-button" (click)="toggleButton()">{{buttonLabel}}</button>
-  </div>
-  <div *ngIf="isfinished" class="end-container">
-    <h2>Fin de l'entraînement</h2>
-    <p>Vous avez répondu correctement à {{ score }} questions sur {{ questions.length }}</p>
-    <button class="restart-button" (click)="restart()">Recommencer</button>
-  </div>
+  -->
+  <button (click)="toggleButton()">{{ buttonLabel }}</button>
+  <p *ngIf="responseMode">{{ result }}</p>
+</div>
+<div *ngIf="isfinished">
+  <h2>Quiz terminé!</h2>
+  <p>Votre score: {{ score }} / {{ nbQuestions }}</p>
+  <button (click)="restart()">Recommencer</button>
 </div>
 
   

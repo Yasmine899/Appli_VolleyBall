@@ -1,0 +1,18 @@
+<!-- entrainement-main.component.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrainement par chapitre</title>
+</head>
+<body>
+    <main>
+        <h1>Entrainement par chapitre</h1>
+        <div *ngFor="let chapitre of chapitres; let i = index">
+            <a [routerLink]="['/entrainement', i+1]"><h2>{{ chapitre }}</h2></a>
+        </div>
+        <h1>Entrainement pour examen</h1>
+    </main>
+</body>
+</html>
