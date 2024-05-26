@@ -1,8 +1,53 @@
-#container {
-    margin: 15px;
-    margin-top: 50px;
+// Variables for colors and spacing
+$FFSU-Blue: #007DA0;
+$FFSU-Red: #D10019;
+$text-color: #333;
+$link-color: $FFSU-Blue;
+$spacing-unit: 16px;
+$font-stack: 'Arial', sans-serif;
+
+// General reset and typography
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.txt {
-    font-size: 20px;
+body {
+  font-family: $font-stack;
+  background-color: #f9f9f9;
+  color: $text-color;
+  line-height: 1.6;
+  padding: $spacing-unit;
+}
+
+// Main section styles
+section {
+  margin: $spacing-unit auto;
+  padding: $spacing-unit;
+  max-width: 800px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  p {
+    margin-bottom: $spacing-unit;
+    font-size: 1rem;
+    color: $text-color;
+    line-height: 1.6;
+  }
+
+  a {
+    color: $link-color;
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $FFSU-Red;
+    }
+  }
+
+  br {
+    margin: $spacing-unit 0;
+  }
 }
