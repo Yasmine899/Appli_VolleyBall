@@ -2,13 +2,11 @@
 $FFSU-Blue: #007DA0;
 $FFSU-Red: #D10019;
 $text-color: #333;
-$background-color: #f2f2f2;
-$section-bg-color: #fff;
-$section-border-color: #ccc;
-$heading-color: #000;
-$content-color: #666;
-$font-stack: Arial, sans-serif;
+$background-color: #ecf0f1;
+$link-color: $FFSU-Blue;
+$link-font-weight: 600;
 $spacing-unit: 20px;
+$font-stack: 'Arial', sans-serif;
 
 // General reset and typography
 * {
@@ -19,8 +17,9 @@ $spacing-unit: 20px;
 
 body {
   font-family: $font-stack;
-  color: $text-color;
   background-color: $background-color;
+  color: $text-color;
+  line-height: 1.6;
   padding: $spacing-unit;
 }
 
@@ -29,7 +28,7 @@ main {
   margin: 0 auto;
   max-width: 1000px;
   padding: $spacing-unit;
-  background-color: $section-bg-color;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -38,9 +37,54 @@ main {
     font-size: 2.5rem;
     margin-bottom: $spacing-unit;
     text-align: center;
+    padding: $spacing-unit;
+    background-color: $FFSU-Blue;
+    color: #fff;
+    border-radius: 8px;
   }
 
   section {
     margin-bottom: $spacing-unit * 1.5;
+  }
+
+  .table-of-contents {
+    margin-bottom: $spacing-unit;
+    padding-bottom: $spacing-unit;
+    border-bottom: 1px solid #ccc;
+
+    nav {
+      ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        
+        li {
+          flex: 1 1 calc(33.33% - 20px); // Three items per row with some gap
+          margin-bottom: 20px;
+          display: flex;
+
+          a {
+            text-decoration: none;
+            color: $link-color;
+            font-size: 1.2rem;
+            padding: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid $FFSU-Blue;
+            font-weight: $link-font-weight;
+
+            &:hover {
+              background-color: $FFSU-Blue;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
   }
 }

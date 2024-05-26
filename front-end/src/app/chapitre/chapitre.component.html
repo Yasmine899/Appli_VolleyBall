@@ -1,6 +1,7 @@
-<h2 *ngIf="showChapitreTitle">Chapitre {{chapitreId}}</h2>
+<h2 *ngIf="showChapitreTitle" id="Chapitre{{chapitreId}}">Chapitre {{chapitreId}}</h2>
 <section *ngFor="let chapitreSection of chapitreData">
-    <h3>{{chapitreSection.title}}</h3>
+    <h3 *ngIf="showChapitreTitle" id="{{chapitreSection.reference_id}}">{{chapitreSection.reference_id}} - {{chapitreSection.title}}</h3>
+    <h3 *ngIf="!showChapitreTitle">{{chapitreSection.title}}</h3>
     <p>{{chapitreSection.course_description}}</p>
 </section>
 
