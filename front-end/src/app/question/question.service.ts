@@ -1,42 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Question } from './question'; // Importer l'interface ou la classe Question
+import { Question } from './question'; 
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Answer } from './answer';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class QuestionService {
-  private questions: Question[] = [
-    {
-      statement: "Quelles sont les dimensions minimales de l'aire de jeu ?",
-      options: ["au minimum 9m x 18m", "au minimum 9m x 9m", "au minimum 15m x 24m"],
-      correctAnswers: [2]
-    },
-    {
-      statement: "La surface de jeu ...",
-      options: ["ne doit présenter aucun risque de blessure pour les joueurs", "est plate", "n'est pas glissante ni rugueuse", "est horizontale et uniforme"],
-      correctAnswers: [0,1,2,3]
-    },
-    {
-      statement: "De quelle couleur doit-être la surface de jeu?",
-      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
-      correctAnswers: [1]
-    },
-    {
-      statement: "De quelle couleur doit-être la surface de jeu?",
-      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
-      correctAnswers: [1]
-    },
-    {
-      statement: "De quelle couleur doit-être la surface de jeu?",
-      options: ["Peut importe", "De couleur claire", "De couleur foncée"],
-      correctAnswers: [1]
-    }
-  ]; 
-  
-  constructor() { }
 
-  getQuestions(): Question[] {
-    return this.questions;
+  readonly API_URL = "http://localhost:8080";
+  readonly API_ENDPOINT_QUESTIONS = "/questions";
+  readonly API_ENDPOINT_QUESTIONS_BY_CHAPTER = "/questionForChapter/";
+  readonly answerApiUrl=  "http://localhost:8080/responseForQuestion/";
+
+
+  
+  constructor(private httpCLient: HttpClient) { }
+
+  getQuestions() : Observable<Question[]> {
+    return this.httpCLient.get<Question[]>(this.API_URL + this.API_ENDPOINT_QUESTIONS);
+  }
+
+  getQuestionsByChapter(chapter: number) : Observable<Question[]> {
+    return this.httpCLient.get<Question[]>(this.API_URL + this.API_ENDPOINT_QUESTIONS_BY_CHAPTER + chapter);
+  }
+
+  getAnswers(questionId: number) : Observable<Answer[]> {
+    return this.httpCLient.get<Answer[]>(`${this.answerApiUrl}${questionId}`);
   }
 }

@@ -2,7 +2,6 @@ package backend.Controller;
 
 import backend.Model.Question;
 import backend.Service.QuestionService;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +12,6 @@ import java.util.List;
 @CrossOrigin(origins="*")
 @RestController
 public class QuestionController {
-
-    public QuestionService questionService;
 
     @RequestMapping("/questionForChapter/{chapter}")
     public List<Question> getQuestionsByChapter(@PathVariable int chapter){

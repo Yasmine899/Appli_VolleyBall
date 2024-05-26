@@ -2,6 +2,7 @@
 $FFSU-Blue: #007DA0;
 $FFSU-Red: #D10019;
 $text-color: #333;
+$background-color: #ecf0f1;
 $link-color: $FFSU-Blue;
 $spacing-unit: 16px;
 $font-stack: 'Arial', sans-serif;
@@ -15,39 +16,48 @@ $font-stack: 'Arial', sans-serif;
 
 body {
   font-family: $font-stack;
-  background-color: #f9f9f9;
+  background-color: $background-color;
   color: $text-color;
   line-height: 1.6;
   padding: $spacing-unit;
 }
 
-// Main section styles
-section {
+// Header styles
+h1 {
+  background-color: $FFSU-Blue;
+  padding: $spacing-unit;
+  text-align: center;
+  color: #fff;
+  font-size: 2rem;
+}
+
+// Main content styles
+main {
   margin: $spacing-unit auto;
   padding: $spacing-unit;
-  max-width: 800px;
+  max-width: 1200px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 
-  p {
-    margin-bottom: $spacing-unit;
-    font-size: 1rem;
-    color: $text-color;
-    line-height: 1.6;
-  }
-
   a {
-    color: $link-color;
+    display: block;
     text-decoration: none;
-    transition: color 0.3s;
+    color: $link-color;
+    margin: $spacing-unit 0;
+    padding: $spacing-unit;
+    border: 1px solid $FFSU-Blue;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
 
     &:hover {
-      color: $FFSU-Red;
+      background-color: $FFSU-Blue;
+      color: #fff;
     }
-  }
 
-  br {
-    margin: $spacing-unit 0;
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
   }
 }
