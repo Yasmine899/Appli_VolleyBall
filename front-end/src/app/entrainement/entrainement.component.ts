@@ -44,14 +44,16 @@ throw new Error('Method not implemented.');
         this.currentQuestion = this.questions[this.currentIndex];
         this.nbQuestions = this.questions.length;
         this.buttonLabel = "Valider";
+        this.loadAnswers(this.currentQuestion?.questionId);
         console.log('this.questions après assignation : ', this.questions);
       });
     }
   }
 
-  loadAnswers(): void {
-    if (this.currentQuestion) {
-      this.questionService.getAnswers(this.currentQuestion.questionId).subscribe((answers: Answer[]) => {
+  loadAnswers(questionId: number | undefined): void {
+    if (questionId !== undefined) {
+      this.questionService.getAnswers(questionId).subscribe((answers) => {
+        console.log('Réponses récupérées : ', answers);
         this.answers = answers;
       });
     }
@@ -63,7 +65,7 @@ throw new Error('Method not implemented.');
       this.currentQuestion = this.questions[this.currentIndex];
       this.buttonLabel = "Valider";
       this.responseMode = false;
-      this.loadAnswers(); // Charger les réponses pour la prochaine question
+      this.loadAnswers(this.currentQuestion?.questionId); // Charger les réponses pour la prochaine question
     } else {
       this.isfinished = true;
       this.currentQuestion = undefined;
