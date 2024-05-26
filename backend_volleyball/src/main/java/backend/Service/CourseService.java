@@ -1,6 +1,7 @@
 package backend.Service;
 
 import backend.Model.Course;
+import backend.Model.Section;
 import backend.connectMysql;
 
 import java.sql.Connection;
@@ -8,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CourseService {
 
@@ -65,9 +68,8 @@ public class CourseService {
         return courseIds;
     }
 
-
     //obtenir la description de ce idCourse
-    public String getDescriptionByReferenceId(String  Reference_id) {
+    public static String getDescriptionByReferenceId(String Reference_id) {
         String result=null;
         try{
             Connection connection =connectMysql.getConnection();
@@ -88,6 +90,27 @@ public class CourseService {
         }
 
         return result;
+    }
+
+    public static ArrayList<Section>  getAllSections() {
+        Connection connection = connectMysql.getConnection();
+        ArrayList<Section> sections = new ArrayList<>();
+        try{
+            String sql = "select * from section";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                sections.add(new Section(resultSet.getInt("id"),resultSet.getString("sectionDescription")));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sections;
     }
 
 
