@@ -1,24 +1,30 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuestionService } from '../question/question.service';
-import { Question } from '../question/question';
+import { ExamenQuestion } from './examenQuestion';
+import { ExamenService } from './examen.service';
 
 @Component({
   selector: 'app-examen',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './examen.component.html',
-  styleUrl: './examen.component.scss'
+  styleUrl: './examen.component.scss',
+  providers: [ExamenService]
 })
+
 export class ExamenComponent {
   @ViewChild('exam_preview') exam_preview: ElementRef;
-  public questions: Question[] = [];
+  public questions: ExamenQuestion[] = [];
 
-  constructor(private questionService: QuestionService) { }
+  constructor(private examenService: ExamenService) { }
 
   ngOnInit(): void {
     // To do: get questions from database
-    this.questions = this.questionService.getQuestions();
+    this.examenService.getQuestionsFromChapter("1").subscribe((data) => {
+      //this.questions = data;
+      var q = data;
+      console.log(q);
+    })
   }
 
   new_exam() {
