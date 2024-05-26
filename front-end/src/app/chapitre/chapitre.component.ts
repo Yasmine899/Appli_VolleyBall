@@ -27,7 +27,7 @@ export class ChapitreComponent implements OnInit {
       this.chapitreData = data;
     });
 
-    this.showChapitreTitle = this.chapitreId > 0 && this.chapitreId < 99 ? true : false;
+    this.showChapitreTitle = this.chapitreId > 0 && this.chapitreId < 99 && this.chapitreId != 10 ? true : false;
     this.isFigureChapitre = this.chapitreId == this.FIGURE_CHAPITRE_ID ? true : false;
   }
 }
