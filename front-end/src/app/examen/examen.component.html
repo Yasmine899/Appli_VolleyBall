@@ -22,15 +22,15 @@
       <div id="preview_border">
         <div #exam_preview>
             <div *ngFor="let question of questions">
-                <h2>{{ question.statement }}</h2>
-                <ul>
+                <h2>{{ question.questionText }}</h2>
+                <!--<ul>
                     <li *ngFor="let option of question.options; let i = index" class="listElem">
                       <label class="option-label" for="`option-${index}`">
                         <input type="checkbox" id="`option-${index}" class="option-checkbox" disabled>
                         <span class="option-text">{{ option }}</span>
                       </label>
                     </li>
-                </ul>
+                </ul>-->
             </div>
         </div>
       </div>
