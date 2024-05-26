@@ -1,8 +1,14 @@
-<section *ngIf="intro.length > 0">
+<!--<section *ngIf="intro.length > 0">
     <p *ngFor="let paragraph of intro">{{paragraph}}</p>
 </section>
 <section *ngFor="let subSectionTitle of subSectionTitles">
     <h3>{{subSectionTitle}}</h3>
     <p *ngFor="let paragraph of content">{{paragraph}}</p>
+</section>-->
+
+<section *ngFor="let chapitreSection of chapitreData">
+    <h3>{{chapitreSection.title}}</h3>
+    <p>{{chapitreSection.course_description}}</p>
 </section>
+
 

@@ -1,18 +1,26 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {CoursApiConnectService} from '../cours-api-connect.service';
 
 @Component({
   selector: 'app-chapitre',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './chapitre.component.html',
-  styleUrl: './chapitre.component.scss'
+  styleUrl: './chapitre.component.scss',
+  providers: [CoursApiConnectService]
 })
-export class ChapitreComponent {
-  @Input() title: string; // The title of the chapter
-  hasIntroParagraph: boolean; // Whether the chapter has an introduction paragraph
-  @Input() intro: string[]; // The introduction paragraphs of the chapter
+export class ChapitreComponent implements OnInit {
+  @Input() chapitreId: number;
+  chapitreData: any;
 
-  @Input() subSectionTitles: string[]; // The titles of the sections of the chapter
-  @Input() content: string[]; // The content of the chapter
+
+ constructor(private coursApiConnectService: CoursApiConnectService) { }
+
+  ngOnInit(): void {
+    console.log("Getting chapitre" + this.chapitreId + " data from API...");
+    this.coursApiConnectService.getCoursChapter(this.chapitreId).subscribe((data) => {
+      this.chapitreData = data;
+    });
+  }
 }
