@@ -40,6 +40,7 @@ body {
 }
 
 #preview_border {
+    min-height: 100px;
     text-align: initial;
     padding: 10px 20px;
     border: 1px solid black;
@@ -49,14 +50,19 @@ body {
 @media print {
     #description, .btn {
         display: none;
+        margin: 0%;
     }
     #preview_border {
         border: none;
+        margin: 0%;
+        padding: 0%;
     }
     .nom {
         display: block;
     }
     #container {
         box-shadow: none;
+        margin: 0%;
+        padding: 0%;
     }
 }

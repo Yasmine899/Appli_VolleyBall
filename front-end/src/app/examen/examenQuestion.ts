@@ -3,4 +3,5 @@ export interface ExamenQuestion {
     chapitre: number;
     questionText: string; // Énoncé de la question
     questionScore: number;
+    options: string[];
 }

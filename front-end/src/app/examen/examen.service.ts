@@ -6,11 +6,23 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ExamenService {
 
-  readonly API = "http://localhost:8080/questionForChapter/";
+  readonly API_CHAPTER = "http://localhost:8080/questionForChapter/";
+
+  readonly API_OPTIONS = "http://localhost:8080/questions";
+
+  readonly API_ALL_QUESTIONS = "http://localhost:8080/questions";
 
   constructor(private httpClient: HttpClient) { }
 
-  getQuestionsFromChapter(chapter: string) {
-    return this.httpClient.get(this.API+chapter);
+  getQuestionsFromChapter(chapter: number) {
+    return this.httpClient.get(this.API_CHAPTER + chapter);
+  }
+
+  getQuestionOptions(questionId: number) {
+    return this.httpClient.get(this.API_OPTIONS + questionId);
+  }
+
+  getAllQuestions() {
+    return this.httpClient.get(this.API_ALL_QUESTIONS);
   }
 }
