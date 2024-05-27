@@ -8,7 +8,7 @@ export class ExamenService {
 
   readonly API_CHAPTER = "http://localhost:8080/questionForChapter/";
 
-  readonly API_OPTIONS = "http://localhost:8080/questions";
+  readonly API_OPTIONS = "http://localhost:8080/responseForQuestion/";
 
   readonly API_ALL_QUESTIONS = "http://localhost:8080/questions";
 

@@ -18,6 +18,7 @@ export class ExamenComponent {
   chapters: number[] = [];
   examLength: number = 40;
   chapterLengths: number[] = [];
+  elemOpts: string[] = []
 
   constructor(private examenService: ExamenService) { }
 
@@ -56,15 +57,30 @@ export class ExamenComponent {
         let available = data;
         for (let k = 0; k < this.chapterLengths[i]; k++) {
           let random = Math.floor(Math.random()*available.length);
-          this.questions.push(available[random]);
 
-          // Add the options to the newly added question
-          this.examenService.getQuestionOptions(available[random].questionId).subscribe((options: any) => {
-            this.questions[this.questions.length - 1].options = options;
+          // Find the options to the newly added question
+          this.examenService.getQuestionOptions(available[random].questionId).subscribe((optionsData: any) => {
+            
+            let options: string[] = optionsData.map((option: any) => option.reponseText);
+
+            let elem = {
+              chapitre: available[random].chapitre, 
+              questionId: available[random].questionId,
+              questionText: available[random].questionText,
+              questionScore: available[random].questionScore,
+              options: options
+            }
+
+            // Add the options and push the constructed question to the list of questions used in the exam 
+            this.questions.push(elem);
+
+            console.log("this.questions: ");
+            console.log(this.questions[this.questions.length-1]);
+
+            // Remove the newly added question from the available array
+            available.splice(random,1);
+            this.elemOpts.splice(0,this.elemOpts.length);
           })
-
-          // Remove the newly added question from the available array
-          available.splice(random,1);
         }
       })
     }
