@@ -8,13 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuestionService {
 
     public static List<Question> getQuestionsByChapter(int chapter) {
         List<Question> questions = new ArrayList<>();
-        String sql = "SELECT * FROM question WHERE chapitre = ?";
+        String sql = "SELECT * FROM question WHERE chapitre = ? ORDER BY RAND() LIMIT 10";
         try (
                 Connection connection = connectMysql.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
@@ -50,6 +51,67 @@ public class QuestionService {
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération de toutes les questions : " + e.getMessage());
+        }
+        return questions;
+    }
+
+    static class ChapterInfo {
+        int chapter;
+        int totalQuestions;
+
+        ChapterInfo(int chapter, int totalQuestions) {
+            this.chapter = chapter;
+            this.totalQuestions = totalQuestions;
+        }
+    }
+
+    public static List<Question> getRandomQuestions() {
+        int totalQuestions = 40;
+        List<Question> questions = new ArrayList<>();
+        try (Connection connection = connectMysql.getConnection()) {
+            // Step 1: Get the total number of questions per chapter
+            String countSql = "SELECT chapitre, COUNT(*) AS total FROM question GROUP BY chapitre";
+            PreparedStatement countStatement = connection.prepareStatement(countSql);
+            ResultSet countResultSet = countStatement.executeQuery();
+
+            // Step 2: Calculate the number of questions to select from each chapter
+            List<ChapterInfo> chapterInfos = new ArrayList<>();
+            int overallTotalQuestions = 0;
+            while (countResultSet.next()) {
+                int chapitre = countResultSet.getInt("chapitre");
+                int chapterTotal = countResultSet.getInt("total");
+                overallTotalQuestions += chapterTotal;
+                chapterInfos.add(new ChapterInfo(chapitre, chapterTotal));
+            }
+            countResultSet.close();
+            countStatement.close();
+
+            // Step 3: Select questions based on proportions
+            for (ChapterInfo chapterInfo : chapterInfos) {
+                int chapterQuestionsToSelect = (int) Math.round((double) chapterInfo.totalQuestions / overallTotalQuestions * totalQuestions);
+                String selectSql = "SELECT * FROM question WHERE chapitre = ? ORDER BY RAND() LIMIT ?";
+                PreparedStatement selectStatement = connection.prepareStatement(selectSql);
+                selectStatement.setInt(1, chapterInfo.chapter);
+                selectStatement.setInt(2, chapterQuestionsToSelect);
+                ResultSet selectResultSet = selectStatement.executeQuery();
+                while (selectResultSet.next()) {
+                    Question question = new Question(
+                            selectResultSet.getInt("question_id"),
+                            selectResultSet.getInt("chapitre"),
+                            selectResultSet.getString("question_text"),
+                            selectResultSet.getInt("question_score")
+                    );
+                    questions.add(question);
+                }
+                selectResultSet.close();
+                selectStatement.close();
+            }
+
+            // Step 4: Shuffle the questions to ensure randomness
+            Collections.shuffle(questions);
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des questions : " + e.getMessage());
         }
         return questions;
     }

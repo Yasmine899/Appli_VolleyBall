@@ -23,6 +23,11 @@ public class QuestionController {
         return QuestionService.getAllQuestions();
     }
 
+    @RequestMapping("/questions/random")
+    public List<Question> getRandomQuestions(){
+        return QuestionService.getRandomQuestions();
+    }
+
     @RequestMapping("/question/{questionId}")
     public Question getQuestionById(@PathVariable int questionId){
         return QuestionService.getQuestionById(questionId);

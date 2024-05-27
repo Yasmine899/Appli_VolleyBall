@@ -14,6 +14,7 @@ public class ReponseService {
 
     public static List<Reponse> getReponsesByQuestion(int questionId) {
         List<Reponse> reponses = new ArrayList<>();
+        System.out.println("Selecting reponses by question id: " + questionId);
         String sql = "SELECT * FROM reponse WHERE question_id = ?";
         try (
                 Connection connection = connectMysql.getConnection();
@@ -33,6 +34,7 @@ public class ReponseService {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des réponses par ID de question : " + e.getMessage());
         }
+        System.out.println("Reponses found: " + reponses.size());
         return reponses;
     }
 
