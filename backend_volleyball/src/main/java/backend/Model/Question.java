@@ -6,16 +6,20 @@ public class Question {
     private int chapitre;
     private String questionText;
     private int questionScore;
+    private String referenceID;
+
+
 
     public Question() {
 
     }
 
-    public Question(int questionId, int chapitre, String questionText, int questionScore) {
+    public Question(int questionId, int chapitre, String questionText, int questionScore, String referenceID) {
         this.questionId = questionId;
         this.chapitre = chapitre;
         this.questionText = questionText;
         this.questionScore = questionScore;
+        this.referenceID = referenceID;
     }
 
     public int getQuestionId() {
@@ -50,5 +54,11 @@ public class Question {
         this.questionScore = questionScore;
     }
 
+    public String getReferenceID() {
+        return referenceID;
+    }
 
+    public void setReferenceID(String referenceID) {
+        this.referenceID = referenceID;
+    }
 }

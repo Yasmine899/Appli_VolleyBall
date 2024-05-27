@@ -103,7 +103,7 @@ export class EntrainementComponent implements OnInit {
       this.score++;
       this.result = "Bonne réponse!";
     } else {
-      this.result = "Mauvaise réponse!";
+      this.result = "Mauvaise réponse : n'hésites pas à revoir le cours " + this.currentQuestion?.referenceID;
     }
 
     if (this.currentIndex === this.nbQuestions - 1) {

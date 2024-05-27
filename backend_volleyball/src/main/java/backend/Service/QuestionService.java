@@ -23,7 +23,7 @@ public class QuestionService {
             statement.setInt(1, chapter);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Question question = new Question(resultSet.getInt("question_id"), resultSet.getInt("chapitre"), resultSet.getString("question_text"), resultSet.getInt("question_score"));
+                    Question question = new Question(resultSet.getInt("question_id"), resultSet.getInt("chapitre"), resultSet.getString("question_text"), resultSet.getInt("question_score"), resultSet.getString("reference_id"));
                     questions.add(question);
                 }
             }
@@ -99,7 +99,9 @@ public class QuestionService {
                             selectResultSet.getInt("question_id"),
                             selectResultSet.getInt("chapitre"),
                             selectResultSet.getString("question_text"),
-                            selectResultSet.getInt("question_score")
+                            selectResultSet.getInt("question_score"),
+                            selectResultSet.getString("reference_id")
+
                     );
                     questions.add(question);
                 }

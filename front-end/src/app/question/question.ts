@@ -3,4 +3,5 @@ export interface Question {
     chapitre: number;
     questionText: string;
     questionScore: number;
+    referenceID: string;
   }
