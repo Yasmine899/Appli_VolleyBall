@@ -15,7 +15,7 @@ public class QuestionService {
 
     public static List<Question> getQuestionsByChapter(int chapter) {
         List<Question> questions = new ArrayList<>();
-        String sql = "SELECT * FROM question WHERE chapitre = ? ORDER BY RAND() LIMIT 10";
+        String sql = "SELECT * FROM question WHERE chapitre = ? AND qst_qcm = 0 ORDER BY RAND() LIMIT 10";
         try (
                 Connection connection = connectMysql.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)

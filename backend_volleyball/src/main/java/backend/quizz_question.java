@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class quizz_question {
-
-   
-
+    
     // d'apres idQuizz et id Chapitre, rajoute les question random dans la bdd
     public  void insert_quizz_AllQuestion(int idQuizz,int idChapitre){
         int scoreTotal=quizzs.getScoreTotalByIdQuizz(idQuizz);

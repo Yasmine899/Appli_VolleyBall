@@ -1,20 +1,19 @@
-<!-- entrainement.component.html -->
+<div *ngIf="!isfinished">
+  <h2>{{ currentQuestion?.questionText }}</h2>
+  <ul>
+    <li *ngFor="let answer of answers let i = index"  >
+      
+      <label [ngClass]="getOptionClasses(i)" for="`option-${index}`">
+        <input type="checkbox" [value]="answer.responseId">
+        <span class="option-text">{{ answer.reponseText }}</span>
+      </label>
 
-<div *ngIf="currentQuestion">
-  <h2>{{ currentQuestion.questionText }}</h2>
-  <!--
-  <div *ngFor="let answer of loadAnswers():; let i = index">
-    <input type="checkbox" [id]="'answer' + i" [disabled]="responseMode">
-    <label [for]="'answer' + i" [ngClass]="getOptionClasses(i)">{{ answer.response_text }}</label>
-  </div>
-  -->
+    </li>
+  </ul>
   <button (click)="toggleButton()">{{ buttonLabel }}</button>
   <p *ngIf="responseMode">{{ result }}</p>
 </div>
 <div *ngIf="isfinished">
-  <h2>Quiz terminé!</h2>
-  <p>Votre score: {{ score }} / {{ nbQuestions }}</p>
-  <button (click)="restart()">Recommencer</button>
+  <h2>Entrainement terminé</h2>
+  <p>Votre score: {{ score }}/{{ nbQuestions }}</p>
 </div>
-
-  

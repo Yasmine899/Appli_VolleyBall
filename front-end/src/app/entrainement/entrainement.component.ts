@@ -14,9 +14,7 @@ import { CommonModule } from '@angular/common';
   providers: [QuestionService]
 })
 export class EntrainementComponent implements OnInit {
-restart() {
-throw new Error('Method not implemented.');
-}
+
 
   questions: Question[] = [];
   answers: Answer[] = [];
@@ -35,6 +33,12 @@ throw new Error('Method not implemented.');
   ) { }
 
   ngOnInit(): void {
+    this.restart();
+  }
+
+  restart() {
+    // Réinitialiser les variables et change les questions
+    
     const chapterId = this.route.snapshot.paramMap.get('chapterId');
     if (chapterId) {
       console.log('Recuperation des questions pour le chapitre ' + chapterId);
@@ -48,7 +52,14 @@ throw new Error('Method not implemented.');
         console.log('this.questions après assignation : ', this.questions);
       });
     }
-  }
+    this.currentIndex = 0;
+    this.isfinished = false;
+    this.score = 0;
+    this.result = "";
+    this.responseMode = false;
+
+}
+
 
   loadAnswers(questionId: number | undefined): void {
     if (questionId !== undefined) {
@@ -74,23 +85,23 @@ throw new Error('Method not implemented.');
   }
 
   validate(): void {
-    let selectedOptions: number[] = [];
-    let correctOptions: number[] = this.answers.filter(a => a.isCorrect).map(a => a.responseId);
-
-    let checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach((checkbox: any, index: number) => {
-      if (checkbox.checked) {
-        selectedOptions.push(this.answers[index].responseId);
+    let allCorrect = true;
+    const inputs = document.querySelectorAll('input[type="checkbox"]');
+    
+    inputs.forEach((input, index) => {
+      const isChecked = (input as HTMLInputElement).checked;
+      const answer = this.answers[index];
+      
+      if (answer.reponseCorrecte && !isChecked) {
+        allCorrect = false;
+      } else if (!answer.reponseCorrecte && isChecked) {
+        allCorrect = false;
       }
     });
-    console.log(selectedOptions);
 
-    let isCorrect: boolean = selectedOptions.length === correctOptions.length && 
-                             selectedOptions.every(val => correctOptions.includes(val));
-
-    if (isCorrect) {
-      this.result = "Bonne réponse!";
+    if (allCorrect) {
       this.score++;
+      this.result = "Bonne réponse!";
     } else {
       this.result = "Mauvaise réponse!";
     }
@@ -113,11 +124,12 @@ throw new Error('Method not implemented.');
   }
 
   getOptionClasses(index: number): any {
+    
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const checkbox = checkboxes[index] as HTMLInputElement;
   return {
-    'correct': this.responseMode && this.answers[index].isCorrect,
-    'incorrect': this.responseMode && !this.answers[index].isCorrect && checkbox.checked,
+    'correct': this.responseMode && this.answers[index].reponseCorrecte,
+    'incorrect': this.responseMode && !this.answers[index].reponseCorrecte && checkbox.checked,
   };
   }
 }
